@@ -1,0 +1,1549 @@
+{
+  "ruleset_version": "1.1",
+  "scoring": {
+    "points_per_question": 5,
+    "raw_max": 80,
+    "secondary_threshold": 0.34,
+    "min_evidence_threshold": 0.6,
+    "min_evidence_question_count": 2,
+    "deficit_precision": 4,
+    "bands": [
+      {
+        "min": 0,
+        "max": 24,
+        "label": "Critical visibility gap",
+        "interpretation": "The organisation lacks the visibility needed to control cloud costs."
+      },
+      {
+        "min": 25,
+        "max": 49,
+        "label": "Early-stage",
+        "interpretation": "Some practices exist, but waste and ownership gaps are likely."
+      },
+      {
+        "min": 50,
+        "max": 74,
+        "label": "Developing",
+        "interpretation": "Useful controls exist, but technical optimisation opportunities remain."
+      },
+      {
+        "min": 75,
+        "max": 89,
+        "label": "Mature",
+        "interpretation": "Cost management is established, with opportunities for continuous improvement."
+      },
+      {
+        "min": 90,
+        "max": 100,
+        "label": "Optimised",
+        "interpretation": "Strong cost practices; focus on advanced optimisation and unit economics."
+      }
+    ]
+  },
+  "categories": [
+    {
+      "id": "visibility_and_allocation",
+      "rank": 1,
+      "label": "Visibility and allocation",
+      "questions": [
+        "Q05",
+        "Q06"
+      ],
+      "max_points": 10
+    },
+    {
+      "id": "idle_resource_review",
+      "rank": 2,
+      "label": "Idle-resource review",
+      "questions": [
+        "Q08",
+        "Q09",
+        "Q10",
+        "Q11"
+      ],
+      "max_points": 20
+    },
+    {
+      "id": "scaling_optimisation",
+      "rank": 3,
+      "label": "Scaling optimisation",
+      "questions": [
+        "Q12",
+        "Q13",
+        "Q14"
+      ],
+      "max_points": 15
+    },
+    {
+      "id": "storage_network_optimisation",
+      "rank": 4,
+      "label": "Storage and network optimisation",
+      "questions": [
+        "Q16",
+        "Q17"
+      ],
+      "max_points": 10
+    },
+    {
+      "id": "commitment_optimisation",
+      "rank": 5,
+      "label": "Commitment optimisation",
+      "questions": [
+        "Q15"
+      ],
+      "max_points": 5
+    },
+    {
+      "id": "governance",
+      "rank": 6,
+      "label": "Governance",
+      "questions": [
+        "Q07",
+        "Q18",
+        "Q19",
+        "Q20"
+      ],
+      "max_points": 20
+    }
+  ],
+  "prerequisite_gates": [
+    {
+      "category": "commitment_optimisation",
+      "reason": "visibility_prerequisite",
+      "rationale": "Commitments bought without spend visibility lock in existing waste.",
+      "blocked_when_any": [
+        {
+          "category_deficit_at_least": {
+            "category": "visibility_and_allocation",
+            "value": 0.4
+          }
+        },
+        {
+          "score_below": 50
+        }
+      ]
+    }
+  ],
+  "signal_boosts": [
+    {
+      "question": "Q04",
+      "option": "spend_unknown",
+      "category": "visibility_and_allocation",
+      "boost": 0.15
+    },
+    {
+      "question": "Q02",
+      "includes": "not_sure",
+      "category": "visibility_and_allocation",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "understand_spend",
+      "category": "visibility_and_allocation",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "improve_utilisation",
+      "category": "idle_resource_review",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "monitoring_budgets",
+      "category": "governance",
+      "boost": 0.1
+    }
+  ],
+  "managed_overlay": {
+    "id": "managed_optimisation",
+    "any": [
+      {
+        "score_below": 50
+      },
+      {
+        "question": "L04",
+        "includes_any": [
+          "reduce_bill",
+          "understand_spend"
+        ]
+      },
+      {
+        "all": [
+          {
+            "question": "L03",
+            "equals_any": [
+              "founder",
+              "finance_ops"
+            ]
+          },
+          {
+            "score_below": 75
+          }
+        ]
+      }
+    ]
+  },
+  "confidence_flags": [
+    {
+      "id": "stable_traffic_vs_unpredictable_workload",
+      "all": [
+        {
+          "question": "Q13",
+          "equals": "stable"
+        },
+        {
+          "question": "Q15",
+          "equals": "unpredictable"
+        }
+      ]
+    },
+    {
+      "id": "no_visibility_but_confident_utilisation",
+      "all": [
+        {
+          "question": "Q06",
+          "equals_any": [
+            "no",
+            "unknown"
+          ]
+        },
+        {
+          "question": "Q08",
+          "equals": "consistent"
+        }
+      ]
+    },
+    {
+      "id": "high_unknown_rate",
+      "unknown_answers_at_least": 4
+    }
+  ],
+  "spend_tiers": [
+    {
+      "id": "spend_micro",
+      "NGN": "Less than ₦100,000",
+      "USD": "Less than $250"
+    },
+    {
+      "id": "spend_small",
+      "NGN": "₦100,000–₦500,000",
+      "USD": "$250–$1,000"
+    },
+    {
+      "id": "spend_mid",
+      "NGN": "₦500,000–₦2 million",
+      "USD": "$1,000–$5,000"
+    },
+    {
+      "id": "spend_large",
+      "NGN": "₦2 million–₦10 million",
+      "USD": "$5,000–$25,000"
+    },
+    {
+      "id": "spend_enterprise",
+      "NGN": "More than ₦10 million",
+      "USD": "More than $25,000"
+    },
+    {
+      "id": "spend_unknown",
+      "NGN": "I do not know",
+      "USD": "I do not know"
+    }
+  ],
+  "sections": [
+    {
+      "n": 1,
+      "title": "Organisation and cloud profile",
+      "kicker": "Context first",
+      "body": "Nothing in this section is scored. These answers decide how everything after them should be read — a four-person startup and a regulated bank can post the same score and need opposite first moves.",
+      "focus": "Who you are and what you run",
+      "question_count": 3,
+      "points": 0
+    },
+    {
+      "n": 2,
+      "title": "Spend visibility and ownership",
+      "kicker": "Where it all starts",
+      "body": "Everything downstream depends on this. You cannot right-size what you cannot see, and you should not commit to a year of capacity before you know what you are running. Score badly here and we will hold back advice that would otherwise be premature.",
+      "focus": "Seeing the bill, and owning it",
+      "question_count": 4,
+      "points": 15
+    },
+    {
+      "n": 3,
+      "title": "Resource utilisation and waste",
+      "kicker": "The fastest money",
+      "body": "Spend on things that are running but not working: servers at 4% CPU, disks from machines deleted last year, staging environments awake all weekend. None of it needs re-architecting, and it usually shows up on the next invoice.",
+      "focus": "Paying for what nobody uses",
+      "question_count": 4,
+      "points": 20
+    },
+    {
+      "n": 4,
+      "title": "Scaling and architecture efficiency",
+      "kicker": "The structural kind",
+      "body": "The last section asked whether you pay for things you do not use. This one asks whether your architecture forces you to. An estate that cannot scale survives its busiest hour by running at that size all year round.",
+      "focus": "What your architecture costs you",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 5,
+      "title": "Pricing, storage, and data transfer",
+      "kicker": "Three different animals",
+      "body": "Costs that behave nothing like compute. Commitments are the largest discount available anywhere in cloud. Storage and data transfer share a quieter problem — both grow steadily without anyone ever deciding they should.",
+      "focus": "Discounts, retention, and egress",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 6,
+      "title": "Governance and optimisation process",
+      "kicker": "Does it last?",
+      "body": "This section predicts the future rather than describing the present. Everything before it can be fixed in one engagement. Only this decides whether the saving is still there in a year.",
+      "focus": "Whether the fix survives",
+      "question_count": 3,
+      "points": 15
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q01",
+      "section": 1,
+      "type": "single",
+      "required": true,
+      "scored": false,
+      "text": "What best describes your organisation?",
+      "options": [
+        {
+          "id": "startup",
+          "label": "Startup or early-stage company"
+        },
+        {
+          "id": "sme",
+          "label": "Small or medium-sized business"
+        },
+        {
+          "id": "growing_tech",
+          "label": "Growing technology company"
+        },
+        {
+          "id": "enterprise",
+          "label": "Enterprise"
+        },
+        {
+          "id": "agency",
+          "label": "Agency or software development company"
+        },
+        {
+          "id": "fintech",
+          "label": "Financial institution or fintech"
+        },
+        {
+          "id": "public_sector",
+          "label": "Government or public-sector organisation"
+        },
+        {
+          "id": "other",
+          "label": "Other"
+        }
+      ]
+    },
+    {
+      "id": "Q02",
+      "section": 1,
+      "type": "multi",
+      "required": true,
+      "scored": false,
+      "text": "Which infrastructure providers do you currently use?",
+      "options": [
+        {
+          "id": "aws",
+          "label": "AWS"
+        },
+        {
+          "id": "azure",
+          "label": "Microsoft Azure"
+        },
+        {
+          "id": "gcp",
+          "label": "Google Cloud"
+        },
+        {
+          "id": "contabo",
+          "label": "Contabo"
+        },
+        {
+          "id": "digitalocean",
+          "label": "DigitalOcean"
+        },
+        {
+          "id": "hetzner",
+          "label": "Hetzner"
+        },
+        {
+          "id": "colocation",
+          "label": "Local data centre or colocation"
+        },
+        {
+          "id": "on_prem",
+          "label": "On-premises servers"
+        },
+        {
+          "id": "not_sure",
+          "label": "I am not sure",
+          "exclusive": true
+        }
+      ]
+    },
+    {
+      "id": "Q03",
+      "section": 1,
+      "type": "multi",
+      "required": true,
+      "scored": false,
+      "text": "What type of workloads do you run?",
+      "help": "Select all that apply.",
+      "options": [
+        {
+          "id": "website",
+          "label": "Business website"
+        },
+        {
+          "id": "saas",
+          "label": "SaaS or web application"
+        },
+        {
+          "id": "ecommerce",
+          "label": "E-commerce platform"
+        },
+        {
+          "id": "mobile_backend",
+          "label": "Mobile-app backend"
+        },
+        {
+          "id": "database",
+          "label": "Database-heavy application"
+        },
+        {
+          "id": "ai_ml",
+          "label": "AI or machine-learning workload"
+        },
+        {
+          "id": "media",
+          "label": "Video or media platform"
+        },
+        {
+          "id": "dev_test",
+          "label": "Development and testing environments"
+        },
+        {
+          "id": "analytics",
+          "label": "Data analytics"
+        },
+        {
+          "id": "internal",
+          "label": "Internal business systems"
+        },
+        {
+          "id": "other",
+          "label": "Other",
+          "free_text": {
+            "max_length": 80
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q04",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": false,
+      "source": "spend_tiers",
+      "text": "Approximately how much does your organisation spend on cloud infrastructure per month?",
+      "options": [
+        {
+          "id": "spend_micro",
+          "label": "Less than ₦100,000"
+        },
+        {
+          "id": "spend_small",
+          "label": "₦100,000–₦500,000"
+        },
+        {
+          "id": "spend_mid",
+          "label": "₦500,000–₦2 million"
+        },
+        {
+          "id": "spend_large",
+          "label": "₦2 million–₦10 million"
+        },
+        {
+          "id": "spend_enterprise",
+          "label": "More than ₦10 million"
+        },
+        {
+          "id": "spend_unknown",
+          "label": "I do not know",
+          "tags": [
+            "visibility_and_allocation"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q05",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "visibility_and_allocation",
+      "text": "How often do you review your cloud bill?",
+      "options": [
+        {
+          "id": "daily",
+          "label": "Daily",
+          "points": 5
+        },
+        {
+          "id": "weekly",
+          "label": "Weekly",
+          "points": 5
+        },
+        {
+          "id": "monthly",
+          "label": "Monthly",
+          "points": 3
+        },
+        {
+          "id": "only_high",
+          "label": "Only when the bill looks unusually high",
+          "points": 1,
+          "tags": [
+            "visibility_and_allocation"
+          ]
+        },
+        {
+          "id": "rarely",
+          "label": "Rarely",
+          "points": 0,
+          "tags": [
+            "visibility_and_allocation"
+          ]
+        },
+        {
+          "id": "never",
+          "label": "Never",
+          "points": 0,
+          "tags": [
+            "visibility_and_allocation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Q06",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "visibility_and_allocation",
+      "text": "Can you allocate cloud spend to specific applications, teams, departments, or projects?",
+      "options": [
+        {
+          "id": "accurate",
+          "label": "Yes, accurately",
+          "points": 5
+        },
+        {
+          "id": "partially",
+          "label": "Partially",
+          "points": 3,
+          "tags": [
+            "visibility_and_allocation"
+          ]
+        },
+        {
+          "id": "inconsistent",
+          "label": "We have tags or labels, but they are inconsistent",
+          "points": 1,
+          "tags": [
+            "visibility_and_allocation"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "visibility_and_allocation"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "visibility_and_allocation"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q07",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "governance",
+      "text": "Do you have a person or team responsible for cloud-cost management?",
+      "options": [
+        {
+          "id": "defined",
+          "label": "Yes, with defined responsibility",
+          "points": 5
+        },
+        {
+          "id": "part_role",
+          "label": "Yes, but it is only part of one person's role",
+          "points": 3
+        },
+        {
+          "id": "informal",
+          "label": "Engineering and finance share responsibility informally",
+          "points": 1,
+          "tags": [
+            "governance"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "governance"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "governance"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q08",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "idle_resource_review",
+      "text": "Do you know which servers, databases, disks, or services are underutilised?",
+      "options": [
+        {
+          "id": "consistent",
+          "label": "Yes, we monitor utilisation consistently",
+          "points": 5
+        },
+        {
+          "id": "partial",
+          "label": "We have partial monitoring",
+          "points": 3
+        },
+        {
+          "id": "occasional",
+          "label": "We check occasionally",
+          "points": 1,
+          "tags": [
+            "idle_resource_review"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "idle_resource_review"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "idle_resource_review"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q09",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "idle_resource_review",
+      "text": "Do you regularly identify and remove unused resources?",
+      "help": "Examples include stopped servers, unattached disks, old snapshots, unused IP addresses, abandoned load balancers, and unused databases.",
+      "options": [
+        {
+          "id": "automated",
+          "label": "Yes, through an automated process",
+          "points": 5
+        },
+        {
+          "id": "periodic",
+          "label": "Yes, through periodic manual reviews",
+          "points": 3
+        },
+        {
+          "id": "sometimes",
+          "label": "Sometimes",
+          "points": 1,
+          "tags": [
+            "idle_resource_review"
+          ]
+        },
+        {
+          "id": "rarely",
+          "label": "Rarely",
+          "points": 0,
+          "tags": [
+            "idle_resource_review"
+          ]
+        },
+        {
+          "id": "never",
+          "label": "Never",
+          "points": 0,
+          "tags": [
+            "idle_resource_review"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "idle_resource_review"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "idle_resource_review",
+      "text": "Do development, testing, and staging environments run outside working hours?",
+      "options": [
+        {
+          "id": "auto_shutdown",
+          "label": "They shut down automatically",
+          "points": 5
+        },
+        {
+          "id": "some_auto",
+          "label": "Some environments shut down automatically",
+          "points": 3
+        },
+        {
+          "id": "manual",
+          "label": "Engineers stop them manually",
+          "points": 1,
+          "tags": [
+            "idle_resource_review"
+          ]
+        },
+        {
+          "id": "continuous",
+          "label": "They run continuously",
+          "points": 0,
+          "tags": [
+            "idle_resource_review"
+          ]
+        },
+        {
+          "id": "no_nonprod",
+          "label": "We do not have separate non-production environments",
+          "points": 0,
+          "not_applicable": true
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "idle_resource_review"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q11",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "idle_resource_review",
+      "text": "When was the last time you right-sized your infrastructure?",
+      "options": [
+        {
+          "id": "last_month",
+          "label": "Within the last month",
+          "points": 5
+        },
+        {
+          "id": "last_quarter",
+          "label": "Within the last three months",
+          "points": 3
+        },
+        {
+          "id": "last_year",
+          "label": "Within the last year",
+          "points": 1,
+          "tags": [
+            "idle_resource_review"
+          ]
+        },
+        {
+          "id": "over_year",
+          "label": "More than a year ago",
+          "points": 0,
+          "tags": [
+            "idle_resource_review"
+          ]
+        },
+        {
+          "id": "never",
+          "label": "Never",
+          "points": 0,
+          "tags": [
+            "idle_resource_review"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "idle_resource_review"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q12",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "scaling_optimisation",
+      "text": "How does your infrastructure respond when traffic increases?",
+      "options": [
+        {
+          "id": "auto_scale",
+          "label": "It scales automatically",
+          "points": 5
+        },
+        {
+          "id": "manual",
+          "label": "Engineers scale it manually",
+          "points": 1,
+          "tags": [
+            "scaling_optimisation"
+          ]
+        },
+        {
+          "id": "oversized",
+          "label": "We run permanently oversized infrastructure",
+          "points": 0,
+          "tags": [
+            "scaling_optimisation"
+          ]
+        },
+        {
+          "id": "slows",
+          "label": "The application slows down during peaks",
+          "points": 0,
+          "tags": [
+            "scaling_optimisation"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "We do not know",
+          "points": 0,
+          "tags": [
+            "scaling_optimisation"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q13",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "scaling_optimisation",
+      "text": "Does your workload have predictable low-traffic periods?",
+      "help": "Examples include overnight, weekends, outside business hours, or between seasonal campaigns.",
+      "options": [
+        {
+          "id": "yes_scale_down",
+          "label": "Yes, and we scale down automatically",
+          "points": 5
+        },
+        {
+          "id": "yes_no_scale",
+          "label": "Yes, but we do not scale down",
+          "points": 0,
+          "tags": [
+            "scaling_optimisation"
+          ]
+        },
+        {
+          "id": "stable",
+          "label": "No, traffic is relatively stable",
+          "points": 3
+        },
+        {
+          "id": "unknown",
+          "label": "We are not sure",
+          "points": 0,
+          "tags": [
+            "scaling_optimisation"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q14",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "scaling_optimisation",
+      "text": "Do you use queues, caching, content delivery, or asynchronous processing to reduce unnecessary compute demand?",
+      "options": [
+        {
+          "id": "yes",
+          "label": "Yes, where appropriate",
+          "points": 5
+        },
+        {
+          "id": "some",
+          "label": "Some of these",
+          "points": 3
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "scaling_optimisation"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "scaling_optimisation"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q15",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "commitment_optimisation",
+      "text": "Do you use pricing commitments for stable workloads?",
+      "help": "Examples include AWS Savings Plans, Reserved Instances, Azure reservations, or equivalent provider commitments.",
+      "options": [
+        {
+          "id": "reviewed",
+          "label": "Yes, and we review them regularly",
+          "points": 5
+        },
+        {
+          "id": "stale",
+          "label": "Yes, but we have not reviewed them recently",
+          "points": 3,
+          "tags": [
+            "commitment_optimisation"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "commitment_optimisation"
+          ]
+        },
+        {
+          "id": "unpredictable",
+          "label": "Our workload is too unpredictable",
+          "points": 1,
+          "tags": [
+            "commitment_optimisation"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "commitment_optimisation"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q16",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "storage_network_optimisation",
+      "text": "Do you have lifecycle policies for storage, logs, backups, and snapshots?",
+      "options": [
+        {
+          "id": "automated",
+          "label": "Yes, with automated retention and tiering",
+          "points": 5
+        },
+        {
+          "id": "some",
+          "label": "Some storage has lifecycle policies",
+          "points": 3
+        },
+        {
+          "id": "manual",
+          "label": "Retention is mostly manual",
+          "points": 1,
+          "tags": [
+            "storage_network_optimisation"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "storage_network_optimisation"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "storage_network_optimisation"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q17",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "storage_network_optimisation",
+      "text": "Do you monitor data-transfer and network costs?",
+      "help": "Consider internet egress, cross-region traffic, NAT Gateway traffic, CDN traffic, and database-to-application traffic.",
+      "options": [
+        {
+          "id": "alerts",
+          "label": "Yes, with alerts",
+          "points": 5
+        },
+        {
+          "id": "occasional",
+          "label": "We review it occasionally",
+          "points": 3
+        },
+        {
+          "id": "on_bill",
+          "label": "We only notice it on the bill",
+          "points": 1,
+          "tags": [
+            "storage_network_optimisation"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "storage_network_optimisation"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "storage_network_optimisation"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q18",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "governance",
+      "text": "Do you have cloud budgets and alerts?",
+      "options": [
+        {
+          "id": "org_and_workload",
+          "label": "Yes, for the organisation and individual workloads",
+          "points": 5
+        },
+        {
+          "id": "account_only",
+          "label": "Yes, but only for the overall account",
+          "points": 3
+        },
+        {
+          "id": "alerts_no_budget",
+          "label": "We have alerts but no formal budgets",
+          "points": 3
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "governance"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "governance"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q19",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "governance",
+      "text": "Do you receive alerts when cloud costs suddenly increase?",
+      "options": [
+        {
+          "id": "automatic",
+          "label": "Yes, automatically",
+          "points": 5
+        },
+        {
+          "id": "manual",
+          "label": "Someone checks manually",
+          "points": 1,
+          "tags": [
+            "governance"
+          ]
+        },
+        {
+          "id": "on_invoice",
+          "label": "Only when the invoice arrives",
+          "points": 0,
+          "tags": [
+            "governance"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "governance"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "governance"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q20",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "governance",
+      "text": "Is cloud cost considered before new infrastructure or application features are deployed?",
+      "options": [
+        {
+          "id": "documented",
+          "label": "Yes, as part of a documented process",
+          "points": 5
+        },
+        {
+          "id": "sometimes",
+          "label": "Sometimes",
+          "points": 3
+        },
+        {
+          "id": "major_only",
+          "label": "Only for major projects",
+          "points": 1,
+          "tags": [
+            "governance"
+          ]
+        },
+        {
+          "id": "rarely",
+          "label": "Rarely",
+          "points": 0,
+          "tags": [
+            "governance"
+          ]
+        },
+        {
+          "id": "never",
+          "label": "Never",
+          "points": 0,
+          "tags": [
+            "governance"
+          ]
+        }
+      ]
+    }
+  ],
+  "lead_fields": [
+    {
+      "id": "L01",
+      "type": "text",
+      "required": true,
+      "text": "What is your name?",
+      "max_length": 120
+    },
+    {
+      "id": "L02",
+      "type": "contact",
+      "required": true,
+      "text": "How should we reach you?",
+      "channels": [
+        {
+          "id": "email",
+          "label": "Work email",
+          "validate": "email"
+        }
+      ]
+    },
+    {
+      "id": "L03",
+      "type": "single",
+      "required": true,
+      "text": "What best describes your role?",
+      "options": [
+        {
+          "id": "founder",
+          "label": "Founder or business owner"
+        },
+        {
+          "id": "cto",
+          "label": "CTO or technical director"
+        },
+        {
+          "id": "eng_manager",
+          "label": "Engineering manager"
+        },
+        {
+          "id": "devops",
+          "label": "Cloud or DevOps engineer"
+        },
+        {
+          "id": "it_manager",
+          "label": "IT manager"
+        },
+        {
+          "id": "finance_ops",
+          "label": "Finance or operations manager"
+        },
+        {
+          "id": "consultant",
+          "label": "Consultant or agency"
+        },
+        {
+          "id": "other",
+          "label": "Other"
+        }
+      ]
+    },
+    {
+      "id": "L04",
+      "type": "multi",
+      "required": true,
+      "max_selections": 3,
+      "text": "What would you like help with first?",
+      "help": "Choose up to three.",
+      "options": [
+        {
+          "id": "reduce_bill",
+          "label": "Reduce our monthly cloud bill"
+        },
+        {
+          "id": "understand_spend",
+          "label": "Understand where our money is going"
+        },
+        {
+          "id": "migrate",
+          "label": "Migrate to a better cloud setup"
+        },
+        {
+          "id": "improve_utilisation",
+          "label": "Improve infrastructure utilisation"
+        },
+        {
+          "id": "monitoring_budgets",
+          "label": "Set up monitoring and budgets"
+        },
+        {
+          "id": "optimise_aws",
+          "label": "Optimise AWS"
+        },
+        {
+          "id": "optimise_other",
+          "label": "Optimise Contabo or another provider"
+        },
+        {
+          "id": "technical_assessment",
+          "label": "Book a technical assessment"
+        }
+      ]
+    },
+    {
+      "id": "L05",
+      "type": "text",
+      "required": true,
+      "text": "What is your company called?",
+      "max_length": 120
+    },
+    {
+      "id": "L06",
+      "type": "checkbox",
+      "required": false,
+      "default": false,
+      "wording_version": "consent-1.0",
+      "text": "Send me cloud-cost tips and occasional updates from Cloudboosta. I can unsubscribe at any time.",
+      "gates_result": false
+    },
+    {
+      "id": "L07",
+      "type": "single",
+      "required": false,
+      "text": "Where is your business based?",
+      "default_from": "locale",
+      "controls": [
+        "spend_currency",
+        "privacy_notice"
+      ]
+    }
+  ],
+  "copy": {
+    "landing": {
+      "eyebrow": "Free assessment",
+      "title": "How ready is your organisation to control its cloud costs?",
+      "body": "Answer 20 short questions about how you track, size, and govern your cloud infrastructure. You will get a readiness score, your biggest opportunity area, and three practical next steps.",
+      "meta": [
+        "Takes 4–6 minutes",
+        "No cloud credentials needed",
+        "Works for AWS, Azure, Contabo, and on-premises"
+      ],
+      "start": "Start the assessment"
+    },
+    "result": {
+      "intro": "Your Cloud Optimisation Readiness Score shows how prepared your organisation is to understand, control, and continuously reduce cloud infrastructure costs.",
+      "disclaimer": "This result is based on your answers and is not a billing audit. A precise savings estimate requires provider billing and utilisation data.",
+      "primary_heading": "Your biggest opportunity",
+      "secondary_heading": "Also worth reviewing",
+      "actions_heading": "Three things to do next",
+      "cta": "Book a cloud optimisation strategy session",
+      "cta_support": "Discuss your result with our team and identify the highest-value next steps for your AWS, Contabo, Azure, or other infrastructure environment.",
+      "email_heading": "Your full report is on its way",
+      "email_body_email": "We have sent the complete breakdown to {contact} — every finding, the reasoning behind it, and the three things to do first.",
+      "email_hint": "It usually arrives within a minute. If it does not, check your spam folder before assuming it went missing.",
+      "email_failed_heading": "We could not send your report",
+      "email_failed_body": "Your answers and your score are saved, so nothing is lost. Book the session below and we will bring the full breakdown with us."
+    },
+    "consent_note": "We will only email or message you beyond this result if you tick the box below.",
+    "findings": {
+      "visibility_and_allocation": {
+        "title": "Cloud-spend visibility and allocation",
+        "body": "Your biggest opportunity is improving cloud-spend visibility and ownership. Begin with billing reports, application or team allocation, tagging, budgets, and regular cost reviews.",
+        "actions": [
+          "Turn on detailed billing reports and give one named person responsibility for reviewing them.",
+          "Agree a tagging standard for application, team, and environment, then apply it to existing resources.",
+          "Put a recurring 30-minute cost review in the calendar, with the bill broken down by application."
+        ]
+      },
+      "idle_resource_review": {
+        "title": "Idle, unused, and oversized resources",
+        "body": "Your answers indicate a likely opportunity to identify idle, unused, or oversized resources. A technical review should examine compute, storage, snapshots, databases, load balancers, and non-production environments.",
+        "actions": [
+          "List every running resource and flag anything averaging under 20% utilisation over the last 30 days.",
+          "Delete unattached disks, old snapshots, unused IP addresses, and idle load balancers.",
+          "Schedule automatic shutdown for development and staging environments outside working hours."
+        ]
+      },
+      "scaling_optimisation": {
+        "title": "Matching capacity to demand",
+        "body": "Your infrastructure may be able to reduce cost by matching capacity to demand. Review autoscaling, scheduled shutdowns, caching, queues, CDN usage, and asynchronous processing.",
+        "actions": [
+          "Establish your true peak and baseline demand from the last 90 days of metrics.",
+          "Introduce autoscaling or scheduled scaling for the workloads with the clearest daily pattern.",
+          "Put caching or a CDN in front of your most requested read-heavy endpoints."
+        ]
+      },
+      "storage_network_optimisation": {
+        "title": "Storage, backup, and data transfer",
+        "body": "Review storage lifecycle policies, backup and snapshot retention, logs, internet egress, cross-region traffic, CDN usage, and gateway-related charges.",
+        "actions": [
+          "Set lifecycle rules that tier older objects down and expire what no longer needs keeping.",
+          "Check backup and snapshot retention against what you are actually required to keep.",
+          "Break data-transfer charges down by egress, cross-region traffic, and NAT or gateway costs."
+        ]
+      },
+      "commitment_optimisation": {
+        "title": "Pricing commitments",
+        "body": "Analyse stable workloads before purchasing or renewing reservations, Savings Plans, or equivalent provider commitments.",
+        "actions": [
+          "Establish your steady-state baseline from at least 90 days of usage.",
+          "Model flexible commitments against that baseline before committing to anything term-locked.",
+          "Diarise a review before each commitment renews, rather than after."
+        ]
+      },
+      "governance": {
+        "title": "Cost governance and ownership",
+        "body": "Establish budgets, anomaly alerts, cost ownership, tagging standards, approval thresholds, and a recurring optimisation review.",
+        "actions": [
+          "Set budgets for the organisation and for each significant workload, alerting before the limit.",
+          "Turn on automated anomaly alerts so cost spikes surface in days rather than on the invoice.",
+          "Add an expected-cost line to the checklist for new infrastructure and features."
+        ]
+      },
+      "continuous_improvement": {
+        "title": "Continuous improvement",
+        "body": "Your answers show strong cost practices across visibility, utilisation, scaling, storage, pricing commitments, and governance. The next opportunities are usually advanced ones: unit economics, architectural efficiency, and keeping commitments aligned as workloads change. Cloud costs drift as systems grow, so this is a position to maintain rather than a finished state.",
+        "actions": [
+          "Move from total cost to unit economics: cost per customer, per transaction, or per tenant.",
+          "Re-check commitment coverage against how the workload has changed this quarter.",
+          "Review your three largest line items for architectural rather than configuration savings."
+        ]
+      },
+      "managed_optimisation": {
+        "title": "A structured audit may be the right next step",
+        "body": "Your answers suggest that a structured cloud-cost audit and recurring optimisation review may be valuable. Use the strategy session to define the right scope.",
+        "actions": []
+      }
+    },
+    "email": {
+      "product": "Cloud Optimisation Assessment",
+      "score_label": "Cloud Optimisation Readiness Score",
+      "report_line": "Here is your full Cloud Optimisation Readiness report.",
+      "operator_summary": [
+        {
+          "label": "Spend",
+          "key": "spend_band_label"
+        },
+        {
+          "label": "Providers",
+          "key": "provider_selection"
+        }
+      ]
+    }
+  },
+  "payload_map": {
+    "fields": {
+      "organisation_type": {
+        "field": "Q01",
+        "mode": "label"
+      },
+      "provider_selection": {
+        "field": "Q02",
+        "mode": "labels"
+      },
+      "workloads": {
+        "field": "Q03",
+        "mode": "labels"
+      },
+      "name": {
+        "field": "L01",
+        "mode": "raw"
+      },
+      "contact": {
+        "field": "L02",
+        "mode": "raw"
+      },
+      "role": {
+        "field": "L03",
+        "mode": "label"
+      },
+      "desired_help": {
+        "field": "L04",
+        "mode": "labels"
+      },
+      "company": {
+        "field": "L05",
+        "mode": "raw"
+      },
+      "country": {
+        "field": "L07",
+        "mode": "value"
+      }
+    },
+    "consent_field": "L06",
+    "spend": {
+      "question": "Q04",
+      "country_field": "L07",
+      "local_country": "NG",
+      "local_currency": "NGN",
+      "default_currency": "USD"
+    }
+  }
+}

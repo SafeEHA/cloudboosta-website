@@ -1,0 +1,31 @@
+/* Webinar studio — internal intake page. Utilitarian Nightshift: the form is
+   the whole page; no nav, no marketing chrome. */
+.studio{min-height:100svh;display:flex;padding:clamp(40px,7vw,96px) 20px}
+.st-wrap{width:100%;max-width:720px;margin:0 auto}
+.st-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:clamp(36px,5vw,64px)}
+.studio h1{font-size:clamp(34px,4.6vw,56px);margin:0 0 18px}
+.studio .lead{max-width:60ch;margin-bottom:clamp(32px,4vw,48px)}
+.studio form{border:1px solid var(--line);border-radius:14px;background:var(--bg2);padding:clamp(24px,3.4vw,44px)}
+.st-file{padding:12px;cursor:pointer}
+.st-file::file-selector-button{margin-right:14px;padding:10px 18px;border:1px solid var(--line2);border-radius:8px;background:transparent;color:var(--ink);font:inherit;cursor:pointer}
+.st-preview{margin-top:14px;max-width:280px}
+.st-preview img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line2)}
+.st-overrides{margin:8px 0 20px;border-top:1px solid var(--line);padding-top:18px}
+.st-overrides summary{display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;font-size:15px;color:var(--ink2)}
+.st-overrides summary::-webkit-details-marker{display:none}
+.st-overrides summary svg{width:16px;height:16px;transition:transform .25s}
+.st-overrides[open] summary svg{transform:rotate(45deg)}
+.st-overrides .two,.st-overrides .field{margin-top:18px}
+.st-progress{margin-top:clamp(32px,4vw,48px);border:1px solid var(--line);border-radius:14px;background:var(--bg2);padding:clamp(24px,3.4vw,44px)}
+.st-progress h2{font-size:clamp(26px,3vw,36px);margin:0 0 20px}
+.st-steps{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-direction:column;gap:12px}
+.st-steps li{position:relative;padding-left:34px;color:var(--ink2);font-size:15px}
+.st-steps li::before{content:"";position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;border:2px solid var(--line2)}
+.st-steps li.done{color:var(--ink)}
+.st-steps li.done::before{border-color:var(--blue);background:var(--blue)}
+.st-steps li.now::before{border-color:var(--blue-text)}
+.st-status{color:var(--ink2)}
+.st-status.is-error{color:#ff7b7b}
+@keyframes stpulse{0%,100%{opacity:.3}50%{opacity:1}}
+.st-dots{animation:stpulse 1.4s infinite}
+@media (prefers-reduced-motion: reduce){.st-dots{animation:none}}

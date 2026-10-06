@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register for the next webinar · Cloudboosta</title>
+<meta name="description" content="Save your seat for Cloudboosta's next free live webinar. Real cloud and DevOps practice from working engineers - bring your questions.">
+<meta name="theme-color" content="#05070C">
+<link rel="icon" href="/site/img/logo-colored.png">
+<link rel="stylesheet" href="/site/fonts/fonts.css">
+<link rel="preload" href="/site/fonts/funnel-display-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/site/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/site/site.css">
+<link rel="stylesheet" href="/site/pages/webinar.css">
+<link rel="preload" href="/api/webinar" as="fetch" crossorigin>
+<script src="/site/pages/webinar-boot.js"></script>
+</head>
+<body>
+<div class="page">
+<a class="skip-link" href="#main">Skip to main content</a>
+<nav class="nav" aria-label="Main">
+  <a class="nav-logo" href="/" aria-label="Cloudboosta"><picture><source type="image/webp" srcset="/site/img/logo-white.webp"><img src="/site/img/logo-white.png" alt="Cloudboosta" width="151" height="30"></picture></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/cloud-services/">Cloud Services</a>
+    <a href="/academy/">Academy</a>
+    <a href="/assessments/">Assessments</a>
+    <span class="dd"><a href="/resources/">Resources <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
+      <span class="dd-menu">
+        <a href="/resources/">Overview<small>Webinars, guides &amp; more</small></a>
+        <a href="/blog/">Blog<small>Field notes from engineers</small></a>
+        <a href="/webinars/">Webinars<small>Live sessions &amp; replays</small></a>
+        <a href="/webinars/register/">Next webinar<small>Save your free seat</small></a>
+      </span>
+    </span>
+    <a href="/who-we-are/">Who We Are</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-primary nav-cta" href="/book-a-call/">Book a call <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <button class="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <button class="nav-mobile-close" type="button" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <a href="/">Home</a>
+  <a href="/cloud-services/">Cloud Services</a>
+  <a href="/academy/">Academy</a>
+  <a href="/assessments/">Assessments</a>
+  <a href="/resources/">Resources</a>
+  <a class="sub" href="/resources/">Overview</a>
+  <a class="sub" href="/blog/">Blog</a>
+  <a class="sub" href="/webinars/">Webinars</a>
+  <a class="sub" href="/webinars/register/">Next webinar</a>
+  <a href="/who-we-are/">Who We Are</a>
+  <a class="btn btn-primary" href="/book-a-call/">Book a call</a>
+</div>
+
+<main id="main" tabindex="-1">
+
+  <!-- UNDECIDED - shown only while webinar-boot.js's w-pending class is set.
+       It holds the hero's height so the footer does not jump up and back. -->
+  <div data-when="pending" hidden aria-busy="true">
+    <section class="hero whero"><div class="whero-glow" aria-hidden="true"></div></section>
+  </div>
+
+  <!-- LIVE WEBINAR — filled by /site/pages/webinar.js from /api/webinar -->
+  <div data-when="live" hidden>
+
+    <section class="hero whero">
+      <div class="whero-glow" aria-hidden="true"></div>
+      <div class="wrap whero-grid">
+        <div class="whero-copy">
+          <div class="tag rise"><span class="live"></span> Free live webinar</div>
+          <h1 class="disp rise rise-1" data-w="title">Our next live webinar</h1>
+          <p class="whero-sub disp rise rise-1" data-w="subtitle" hidden></p>
+          <p class="lead rise rise-2" data-w="summary"></p>
+          <dl class="wfacts rise rise-3">
+            <div class="wfact" data-w="date-row" hidden>
+              <dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Date</dt>
+              <dd data-w="date"></dd>
+            </div>
+            <div class="wfact" data-w="time-row" hidden>
+              <dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Time</dt>
+              <dd><span data-w="time"></span><small data-w="local-time" hidden></small></dd>
+            </div>
+            <div class="wfact">
+              <dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="m15.5 10.5 6-3.5v10l-6-3.5"/></svg>Where</dt>
+              <dd data-w="where">Live online</dd>
+            </div>
+            <div class="wfact" data-w="length-row" hidden>
+              <dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9s10 4 10 9"/></svg>Length</dt>
+              <dd data-w="length"></dd>
+            </div>
+          </dl>
+          <div class="btn-row rise rise-4">
+            <a class="btn btn-primary btn-lg" href="#register">Save my free seat <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+          <div class="wcd rise rise-5" data-w="countdown" hidden aria-label="Time until we go live">
+            <div class="wcd-c"><b data-cdw="d">0</b><span>days</span></div>
+            <div class="wcd-c"><b data-cdw="h">0</b><span>hrs</span></div>
+            <div class="wcd-c"><b data-cdw="m">0</b><span>min</span></div>
+            <div class="wcd-c"><b data-cdw="s">0</b><span>sec</span></div>
+          </div>
+        </div>
+
+        <!-- The speaker, as a portrait. Shown when the webinar has one. -->
+        <figure class="wspk rise rise-3" data-w="portrait-wrap" hidden>
+          <div class="wspk-frame">
+            <img alt="" data-w="portrait" width="660" height="760" decoding="async" fetchpriority="high">
+          </div>
+          <figcaption class="wspk-cap">
+            <span class="tag">Your speaker</span>
+            <b class="disp" data-w="portrait-name"></b>
+            <span data-w="portrait-role"></span>
+            <a class="wspk-more" href="#speaker" data-w="portrait-more" hidden>About the speaker <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+          </figcaption>
+        </figure>
+
+        <!-- No portrait on file: the flyer stands in, as it always did. -->
+        <div class="whero-flyer rise rise-3" data-w="flyer-wrap" hidden>
+          <img alt="Webinar flyer" data-w="flyer" width="640" height="800" decoding="async">
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-w="agenda-section" hidden>
+      <div class="wrap">
+        <span class="tag reveal">What you'll take away</span>
+        <h2 class="disp reveal">Built for <em>your next step.</em></h2>
+        <ul class="agenda" data-w="agenda"></ul>
+      </div>
+    </section>
+
+    <section class="section wbio" id="speaker" data-w="speaker-section" hidden>
+      <div class="wrap wbio-grid">
+        <div class="wbio-photo reveal" data-w="bio-photo-wrap" hidden>
+          <img alt="" data-w="bio-photo" width="660" height="760" loading="lazy" decoding="async">
+        </div>
+        <div class="wbio-copy reveal">
+          <span class="tag">Your speaker</span>
+          <h2 class="disp" data-w="bio-name"></h2>
+          <p class="wbio-role" data-w="bio-role" hidden></p>
+          <div class="wbio-text" data-w="bio"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wreg" id="register">
+      <div class="wrap wreg-grid">
+        <div class="reveal">
+          <span class="tag">Registration</span>
+          <h2 class="disp">Save your <em>seat.</em></h2>
+          <p class="body">It's free. Register with your name and email; the joining link and a reminder come to your inbox, and if you can't make it live, registrants hear about the replay first.</p>
+          <ul class="wreg-points">
+            <li>Working engineers, not slideware - bring your questions</li>
+            <li>Live Q&amp;A at the end</li>
+            <li>No spam, unsubscribe any time</li>
+          </ul>
+        </div>
+        <form class="reveal" method="post" action="/api/webinar" data-webinar-form novalidate>
+          <p class="hp"><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label></p>
+          <div class="field"><label class="lbl" for="w-name">Name</label><input class="input" id="w-name" name="name" type="text" required autocomplete="name"></div>
+          <div class="field"><label class="lbl" for="w-email">Email</label><input class="input" id="w-email" name="email" type="email" required autocomplete="email"></div>
+          <div class="form-foot">
+            <button class="btn btn-primary" type="submit">Save my free seat <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            <span class="quote">Your confirmation lands in your inbox straight away.</span>
+          </div>
+          <p class="wform-note">We use your name and email to send your confirmation, the joining link, reminders and the replay, through MailerLite. Every reminder carries an unsubscribe link. <a href="/privacy.html">Privacy notice</a></p>
+          <div class="wdone" data-w="done" hidden>
+            <h3 class="disp">You're in.</h3>
+            <p class="body">Check your inbox for your confirmation and what to expect. The joining link arrives before we go live. See you there.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- NO WEBINAR OPEN - what shows when /api/webinar says so, fails, or scripts are off -->
+  <div data-when="none">
+    <section class="hero whero">
+      <div class="whero-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="tag rise">Free live webinars</div>
+        <h1 class="disp rise rise-1">The next one is <em>being scheduled.</em></h1>
+        <p class="lead rise rise-2">Registration for our next live webinar isn't open yet. Leave your email and you'll be first to hear when it is - or catch up on the recordings meanwhile.</p>
+        <form class="wnl rise rise-3" method="post" action="/api/form" data-form="newsletter" data-sent="You're on the list - you'll be first to hear.">
+          <input type="hidden" name="form" value="newsletter">
+          <p class="hp"><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label></p>
+          <label class="lbl" for="nl-email">Email</label>
+          <div class="wnl-row">
+            <input class="input" id="nl-email" name="email" type="email" required autocomplete="email" placeholder="you@work.com">
+            <button class="btn btn-primary" type="submit">Notify me</button>
+          </div>
+        </form>
+        <p class="mono rise rise-4 wnl-alt">Replays live on the <a href="/webinars/">webinars page</a>.</p>
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <picture><source type="image/webp" srcset="/site/img/logo-white.webp"><img class="u-f0fa7690" src="/site/img/logo-white.png" alt="Cloudboosta" width="141" height="28"></picture>
+      <p class="body u-c13d549a">Cloud, DevOps, and optimisation. Practitioners, not theorists.</p>
+    </div>
+    <div><p class="fh">Site</p><ul><li><a href="/cloud-services/">Cloud Services</a></li><li><a href="/academy/">Academy</a></li><li><a href="/assessments/">Assessments</a></li><li><a href="/resources/">Resources</a></li><li><a href="/who-we-are/">Who We Are</a></li></ul></div>
+    <div><p class="fh">Connect</p><ul><li><a href="/book-a-call/">Book a call</a></li><li><a href="mailto:support@cloudboosta.co.uk">support@cloudboosta.co.uk</a></li><li><a href="https://wa.me/447592233052">WhatsApp · Academy</a></li><li><a href="https://wa.me/447565707254">WhatsApp · Services</a></li></ul></div>
+    <div><p class="fh">Legal</p><ul><li><a href="/privacy.html">Privacy</a></li><li><a href="#">Terms</a></li></ul></div>
+  </div>
+  <div class="footer-legal"><span>© <span data-year>2026</span> Cloudboosta Technology Solutions Ltd.</span><span class="mono">Global delivery.</span></div>
+</footer>
+<script src="/site/config.js"></script>
+<script src="/site/site.js"></script>
+<script src="/site/pages/webinar.js"></script>
+</div>
+</body>
+</html>

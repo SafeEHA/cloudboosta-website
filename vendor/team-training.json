@@ -1,0 +1,1978 @@
+{
+  "$comment": "DevOps Team Training Assessment, built from training/devops-training-assessment-prd.md and its question bank. Corrections and omissions, all deliberate. (1) ARITHMETIC: the PRD says 24 scored questions and a raw maximum of 120, which assumes every question is scored and can earn 5. Q01 (roles) and Q02 (learner count) are context questions the bank itself marks unscored, and Q03's best answer is worth 3, because the bank scores every real outcome at 3 and only 'not sure yet' at 0. So: 24 questions, 22 scored, raw maximum 21 x 5 + 3 = 108. A test asserts raw_max equals the sum of the best answer to every scored question, so the two can never drift. Numbering matches the source bank exactly. (2) TRACKS: the PRD names eight recommendation tracks; seven are categories here. 'FinOps and operational efficiency' has no category because no question evidences it - nothing in the bank asks about cloud cost or resource efficiency - and a finding nobody's answers can produce would be a guess wearing a recommendation's clothes. Its paragraph is not carried. The eighth category, outcomes_and_format (Q03, Q23, Q24), holds the outcome, measurement and format questions the PRD scores but assigns to no track; it has no PRD paragraph, so its finding body is new copy rather than a borrowed one. (3) GATES: the PRD's five critical-gate rules. Training ownership (Q20), learning enablement (Q21) and operational ownership (Q19) are mandatory findings on the 0-point answers; Q19's 'depends on individual experience' scores 1 and is left to ranking, where its deficit still counts. 'Advanced training without foundations' is a prerequisite gate rather than a finding: containers/platform and DevSecOps are held back from the primary slot while the foundations deficit is high. 'Several tools but no standard workflow' is narrowed: no question asks how many tools are in use, so the gate fires on the workflow half alone - Q16's 'one-off scripts owned by individuals' - and not on 'work is primarily manual', which is no workflow rather than an unstandardised one. No gate is omitted outright. (4) NAMING: the engine stores the delivery format under the payload key migration_direction, which store.js, the result screen and the DB column all read. The key is a historical name from the bank that introduced the feature; the value here is a training delivery format. (5) LEAD: the PRD's L02 offered email or WhatsApp; the site is email-only. L04 drops the PRD's last option, 'Book a DevOps team training strategy session', because it is the CTA rather than a goal. L04 is exposed twice in the payload: as desired_help, the shared lead column store.js writes, and as main_goal, the context key this bank names.",
+  "ruleset_version": "training-1.0.0",
+  "scoring": {
+    "points_per_question": 5,
+    "raw_max": 108,
+    "secondary_threshold": 0.34,
+    "min_evidence_threshold": 0.6,
+    "min_evidence_question_count": 2,
+    "deficit_precision": 4,
+    "bands": [
+      {
+        "min": 0,
+        "max": 24,
+        "label": "Foundation required",
+        "interpretation": "The team needs a structured foundation before advanced DevOps topics."
+      },
+      {
+        "min": 25,
+        "max": 49,
+        "label": "Emerging capability",
+        "interpretation": "Some exposure exists, but practical delivery capability is inconsistent."
+      },
+      {
+        "min": 50,
+        "max": 74,
+        "label": "Developing capability",
+        "interpretation": "The team can perform selected practices but needs standardisation and deeper application."
+      },
+      {
+        "min": 75,
+        "max": 89,
+        "label": "Capable team",
+        "interpretation": "The team has a good foundation; targeted specialist training can close remaining gaps."
+      },
+      {
+        "min": 90,
+        "max": 100,
+        "label": "Advanced enablement",
+        "interpretation": "Focus on platform engineering, reliability, optimisation, leadership, and continuous improvement."
+      }
+    ]
+  },
+  "categories": [
+    {
+      "id": "devops_foundations",
+      "rank": 1,
+      "label": "DevOps foundations",
+      "questions": ["Q04", "Q05", "Q06"],
+      "max_points": 15
+    },
+    {
+      "id": "ci_cd_release_engineering",
+      "rank": 2,
+      "label": "CI/CD and release engineering",
+      "questions": ["Q07", "Q08", "Q09", "Q10"],
+      "max_points": 20
+    },
+    {
+      "id": "iac_cloud_operations",
+      "rank": 3,
+      "label": "Infrastructure as Code and cloud operations",
+      "questions": ["Q11", "Q12", "Q13"],
+      "max_points": 15
+    },
+    {
+      "id": "containers_platform_engineering",
+      "rank": 4,
+      "label": "Containers and platform engineering",
+      "questions": ["Q14", "Q15", "Q16"],
+      "max_points": 15
+    },
+    {
+      "id": "devsecops",
+      "rank": 5,
+      "label": "DevSecOps",
+      "questions": ["Q17"],
+      "max_points": 5
+    },
+    {
+      "id": "observability_reliability",
+      "rank": 6,
+      "label": "Observability and reliability",
+      "questions": ["Q18", "Q19"],
+      "max_points": 10
+    },
+    {
+      "id": "team_enablement",
+      "rank": 7,
+      "label": "Team enablement and operating model",
+      "questions": ["Q20", "Q21", "Q22"],
+      "max_points": 15
+    },
+    {
+      "id": "outcomes_and_format",
+      "rank": 8,
+      "label": "Outcomes, measurement, and format",
+      "questions": ["Q03", "Q23", "Q24"],
+      "max_points": 13
+    }
+  ],
+  "prerequisite_gates": [
+    {
+      "category": "containers_platform_engineering",
+      "reason": "foundations_prerequisite",
+      "rationale": "Platform training for a team without Linux, Git, and cloud fundamentals teaches the slides, not the platform. The pathway is staged: foundations first.",
+      "blocked_when_any": [
+        {
+          "category_deficit_at_least": {
+            "category": "devops_foundations",
+            "value": 0.6
+          }
+        }
+      ]
+    },
+    {
+      "category": "devsecops",
+      "reason": "foundations_prerequisite",
+      "rationale": "Secure pipeline controls assume a team that can operate a pipeline and an environment. Without the foundations, DevSecOps training has nothing to attach to.",
+      "blocked_when_any": [
+        {
+          "category_deficit_at_least": {
+            "category": "devops_foundations",
+            "value": 0.6
+          }
+        }
+      ]
+    }
+  ],
+  "mandatory_findings": [
+    {
+      "category": "team_enablement",
+      "reason": "no_training_owner",
+      "rationale": "PRD section 8: no identified training owner is a mandatory priority. A programme nobody is accountable for is a calendar entry, and the blockers it meets stay met.",
+      "when": {
+        "question": "Q20",
+        "equals_any": ["no", "unknown"]
+      }
+    },
+    {
+      "category": "team_enablement",
+      "reason": "no_practice_time",
+      "rationale": "PRD section 8: learners with no protected practice time is a mandatory priority. Training that competes with delivery work loses to delivery work every time.",
+      "when": {
+        "question": "Q21",
+        "equals_any": ["none", "unknown"]
+      }
+    },
+    {
+      "category": "observability_reliability",
+      "reason": "unclear_production_ownership",
+      "rationale": "PRD section 8: unclear production responsibilities are a mandatory priority. A team that cannot say who responds to an incident cannot be trained to respond to one until it can.",
+      "when": {
+        "question": "Q19",
+        "equals_any": ["no", "unknown"]
+      }
+    },
+    {
+      "category": "containers_platform_engineering",
+      "reason": "no_standard_workflow",
+      "rationale": "PRD section 8: several tools with no standard workflow is a mandatory priority. The questionnaire never counts the tools, so this fires on the workflow half alone - automation that lives in one-off scripts owned by individuals.",
+      "when": {
+        "question": "Q16",
+        "equals": "one_off"
+      }
+    }
+  ],
+  "signal_boosts": [
+    {
+      "question": "Q04",
+      "option": "unknown",
+      "category": "devops_foundations",
+      "boost": 0.15
+    },
+    {
+      "question": "Q07",
+      "option": "unknown",
+      "category": "ci_cd_release_engineering",
+      "boost": 0.15
+    },
+    {
+      "question": "Q11",
+      "option": "unknown",
+      "category": "iac_cloud_operations",
+      "boost": 0.15
+    },
+    {
+      "question": "Q18",
+      "option": "unknown",
+      "category": "observability_reliability",
+      "boost": 0.15
+    },
+    {
+      "question": "Q12",
+      "option": "insecure",
+      "category": "devsecops",
+      "boost": 0.1
+    },
+    {
+      "question": "Q03",
+      "option": "fundamentals",
+      "category": "devops_foundations",
+      "boost": 0.1
+    },
+    {
+      "question": "Q03",
+      "option": "certification",
+      "category": "team_enablement",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "foundations",
+      "category": "devops_foundations",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "ci_cd",
+      "category": "ci_cd_release_engineering",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "iac",
+      "category": "iac_cloud_operations",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "cloud_ops",
+      "category": "iac_cloud_operations",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "containers_platform",
+      "category": "containers_platform_engineering",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "security",
+      "category": "devsecops",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "monitoring_reliability",
+      "category": "observability_reliability",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "certification",
+      "category": "team_enablement",
+      "boost": 0.1
+    }
+  ],
+  "managed_overlay": {
+    "id": "managed_enablement",
+    "any": [
+      {
+        "score_below": 50
+      },
+      {
+        "question": "Q13",
+        "equals_any": ["few_people", "outsourced", "unknown"]
+      },
+      {
+        "question": "Q24",
+        "equals": "coaching"
+      },
+      {
+        "all": [
+          {
+            "question": "L03",
+            "equals_any": ["founder", "cto"]
+          },
+          {
+            "score_below": 75
+          }
+        ]
+      }
+    ]
+  },
+  "confidence_flags": [
+    {
+      "id": "advanced_outcome_without_foundations",
+      "all": [
+        {
+          "question": "Q03",
+          "equals_any": ["ci_cd", "iac", "security_reliability", "platform"]
+        },
+        {
+          "any": [
+            {
+              "question": "Q04",
+              "equals_any": ["few_basic", "little", "unknown"]
+            },
+            {
+              "question": "Q06",
+              "equals_any": ["concentrated", "limited", "unknown"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "certification_goal_without_practice_time",
+      "all": [
+        {
+          "question": "Q03",
+          "equals": "certification"
+        },
+        {
+          "question": "Q21",
+          "equals_any": ["when_permits", "none", "unknown"]
+        }
+      ]
+    },
+    {
+      "id": "project_based_without_owner",
+      "all": [
+        {
+          "question": "Q24",
+          "equals": "project_based"
+        },
+        {
+          "question": "Q20",
+          "equals_any": ["shared", "no", "unknown"]
+        }
+      ]
+    },
+    {
+      "id": "containers_in_production_without_observability",
+      "all": [
+        {
+          "question": "Q14",
+          "equals": "production"
+        },
+        {
+          "question": "Q18",
+          "equals_any": ["basic", "no", "unknown"]
+        }
+      ]
+    },
+    {
+      "id": "deliverables_measured_without_handover",
+      "all": [
+        {
+          "question": "Q23",
+          "equals": "deliverables"
+        },
+        {
+          "question": "Q22",
+          "equals_any": ["individual", "none", "unknown"]
+        }
+      ]
+    },
+    {
+      "id": "many_unknown_answers",
+      "unknown_answers_at_least": 6
+    }
+  ],
+  "strategy_directions": {
+    "$comment": "PRD section 10. One suggested delivery format for the programme. A stated preference on Q24 always wins for its own format; the inferred rules only apply when Q24 is 'not sure', so a prospect is never told a different format from the one they asked for without a conversation. Among inferred rules the lowest priority wins: coaching where expertise is thin, train-the-trainer for a large population, project-based where the outcome is a working thing measured by deliverables, a workshop for a small capable team, and a cohort for everyone in the 5-50 range. The hold fires when neither the outcome nor the format is known.",
+    "default": "cohort_programme",
+    "hold": {
+      "id": "discovery_first",
+      "when": {
+        "all": [
+          {
+            "question": "Q24",
+            "equals": "unsure"
+          },
+          {
+            "question": "Q03",
+            "equals": "unsure"
+          }
+        ]
+      }
+    },
+    "options": [
+      {
+        "id": "workshop",
+        "label": "Workshop",
+        "priority": 40,
+        "when": {
+          "any": [
+            {
+              "question": "Q24",
+              "equals": "workshop"
+            },
+            {
+              "all": [
+                {
+                  "question": "Q24",
+                  "equals": "unsure"
+                },
+                {
+                  "question": "Q02",
+                  "equals_any": ["s1_4", "s5_10"]
+                },
+                {
+                  "score_at_least": 75
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "cohort_programme",
+        "label": "Cohort programme",
+        "priority": 50,
+        "when": {
+          "any": [
+            {
+              "question": "Q24",
+              "equals": "cohort"
+            },
+            {
+              "all": [
+                {
+                  "question": "Q24",
+                  "equals": "unsure"
+                },
+                {
+                  "question": "Q02",
+                  "equals_any": ["s5_10", "s11_25", "s26_50"]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "project_based_enablement",
+        "label": "Project-based enablement",
+        "priority": 30,
+        "when": {
+          "any": [
+            {
+              "question": "Q24",
+              "equals": "project_based"
+            },
+            {
+              "all": [
+                {
+                  "question": "Q24",
+                  "equals": "unsure"
+                },
+                {
+                  "question": "Q03",
+                  "equals_any": ["ci_cd", "iac", "security_reliability", "platform"]
+                },
+                {
+                  "question": "Q23",
+                  "equals": "deliverables"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "train_the_trainer",
+        "label": "Train-the-trainer",
+        "priority": 20,
+        "when": {
+          "any": [
+            {
+              "question": "Q24",
+              "equals": "train_the_trainer"
+            },
+            {
+              "all": [
+                {
+                  "question": "Q24",
+                  "equals": "unsure"
+                },
+                {
+                  "question": "Q02",
+                  "equals": "s50_plus"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "ongoing_coaching",
+        "label": "Ongoing coaching or managed enablement",
+        "priority": 10,
+        "when": {
+          "any": [
+            {
+              "question": "Q24",
+              "equals": "coaching"
+            },
+            {
+              "all": [
+                {
+                  "question": "Q24",
+                  "equals": "unsure"
+                },
+                {
+                  "question": "Q13",
+                  "equals_any": ["outsourced", "unknown"]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "sections": [
+    {
+      "n": 1,
+      "title": "Team and business context",
+      "kicker": "Context first",
+      "focus": "Who is learning, and what for",
+      "body": "Only the outcome question here is scored, and lightly. The roles and the learner count decide how everything after them should be read — a four-person startup team and a fifty-engineer bank can post the same score and need entirely different programmes.",
+      "question_count": 3,
+      "points": 3
+    },
+    {
+      "n": 2,
+      "title": "DevOps foundations",
+      "kicker": "Before the tooling",
+      "focus": "Linux, Git, and the cloud basics",
+      "body": "Every advanced DevOps topic stands on these three. A pipeline course delivered to a team that cannot resolve a merge conflict or read a DNS record produces people who can follow the slides and nothing else, which is why a weak score here reshapes the rest of the recommendation.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 3,
+      "title": "CI/CD and release engineering",
+      "kicker": "The main event",
+      "focus": "Build, test, deploy, and roll back",
+      "body": "The heart of it. These four questions ask not whether a pipeline exists but whether the team could build, maintain, and troubleshoot one — and whether it could get a bad release back out again. A pipeline one person understands is a dependency, not a capability.",
+      "question_count": 4,
+      "points": 20
+    },
+    {
+      "n": 4,
+      "title": "Infrastructure as Code and cloud operations",
+      "kicker": "Repeatability",
+      "focus": "Provisioning, environments, and running the cloud",
+      "body": "Infrastructure the team cannot rebuild from code is infrastructure the team cannot safely change, and operations that depend on two people or an outside supplier are operations that stop when they do. This section asks how independently the team can provision and run its own environments.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 5,
+      "title": "Containers, platform, and automation",
+      "kicker": "Multiplying the team",
+      "focus": "Containers, orchestration, and self-service",
+      "body": "Three questions about the practices that let a small team support a lot of software. They matter most where several teams repeat the same platform work, and least where the foundations are still missing — which is why this track is held back until they are in place.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 6,
+      "title": "Security, observability, and reliability",
+      "kicker": "Secure, visible, resilient",
+      "focus": "Security in delivery, seeing failure, and answering it",
+      "body": "Security checks that happen late, monitoring nobody acts on, and incident response that depends on who is in the office are three versions of the same gap: the team can ship, but cannot yet be trusted to run what it ships. This section asks whether it could learn to.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 7,
+      "title": "Learning readiness and enablement",
+      "kicker": "Will it stick?",
+      "focus": "Ownership, time, and adoption",
+      "body": "This section predicts whether the training works, rather than what it should contain. A programme with no owner, no protected time, and no plan for adoption produces certificates and nothing else — and two of the three answers here can override the rest of the score.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 8,
+      "title": "Outcomes, measurement, and delivery format",
+      "kicker": "Proving it worked",
+      "focus": "How success is measured, and what shape the programme takes",
+      "body": "Two questions that decide what the training is for and how it should be delivered. Success measured by attendance is success nobody can argue with and nobody can act on; the format question feeds the suggested delivery format directly.",
+      "question_count": 2,
+      "points": 10
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q01",
+      "section": 1,
+      "type": "multi",
+      "required": true,
+      "scored": false,
+      "text": "Which roles are represented in the team you want to train?",
+      "help": "Tick everything that applies.",
+      "options": [
+        {
+          "id": "developers",
+          "label": "Software developers"
+        },
+        {
+          "id": "cloud_infra",
+          "label": "Cloud or infrastructure engineers"
+        },
+        {
+          "id": "devops",
+          "label": "DevOps engineers"
+        },
+        {
+          "id": "sre_platform",
+          "label": "SRE or platform engineers"
+        },
+        {
+          "id": "qa",
+          "label": "QA or test engineers"
+        },
+        {
+          "id": "security",
+          "label": "Security engineers"
+        },
+        {
+          "id": "sysadmin",
+          "label": "IT or systems administrators"
+        },
+        {
+          "id": "eng_managers",
+          "label": "Engineering managers or technical leads"
+        },
+        {
+          "id": "product_delivery",
+          "label": "Product or delivery managers"
+        },
+        {
+          "id": "other",
+          "label": "Other"
+        }
+      ]
+    },
+    {
+      "id": "Q02",
+      "section": 1,
+      "type": "single",
+      "required": true,
+      "scored": false,
+      "text": "How many people would participate in the training?",
+      "help": "An estimate is fine. It shapes the delivery format, not your score.",
+      "options": [
+        {
+          "id": "s1_4",
+          "label": "1–4"
+        },
+        {
+          "id": "s5_10",
+          "label": "5–10"
+        },
+        {
+          "id": "s11_25",
+          "label": "11–25"
+        },
+        {
+          "id": "s26_50",
+          "label": "26–50"
+        },
+        {
+          "id": "s50_plus",
+          "label": "More than 50"
+        },
+        {
+          "id": "unsure",
+          "label": "We are not sure yet"
+        }
+      ]
+    },
+    {
+      "id": "Q03",
+      "section": 1,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "outcomes_and_format",
+      "text": "What is the most important outcome you want from the training?",
+      "help": "Every specific outcome scores the same. Only \"not sure yet\" costs you points, because a programme without an outcome has nothing to be measured against.",
+      "options": [
+        {
+          "id": "fundamentals",
+          "label": "Help the team understand DevOps fundamentals",
+          "points": 1,
+          "tags": ["devops_foundations"]
+        },
+        {
+          "id": "ci_cd",
+          "label": "Build or improve CI/CD pipelines",
+          "points": 3,
+          "tags": ["ci_cd"]
+        },
+        {
+          "id": "iac",
+          "label": "Automate infrastructure and cloud operations",
+          "points": 3,
+          "tags": ["iac_cloud_operations"]
+        },
+        {
+          "id": "security_reliability",
+          "label": "Improve security, monitoring, reliability, and incident response",
+          "points": 3,
+          "tags": ["devsecops_reliability"]
+        },
+        {
+          "id": "platform",
+          "label": "Build an internal platform or standard developer workflow",
+          "points": 3,
+          "tags": ["platform_engineering"]
+        },
+        {
+          "id": "certification",
+          "label": "Prepare for certification or formal skills development",
+          "points": 1,
+          "tags": ["learning_enablement"]
+        },
+        {
+          "id": "unsure",
+          "label": "We are not sure yet",
+          "points": 0,
+          "tags": ["training_discovery"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q04",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "devops_foundations",
+      "text": "How independently can the team work with Linux systems, networking, DNS, HTTP, and basic troubleshooting?",
+      "options": [
+        {
+          "id": "independent",
+          "label": "The team can troubleshoot and automate common issues independently",
+          "points": 5
+        },
+        {
+          "id": "most_with_support",
+          "label": "Most team members can handle common tasks with some support",
+          "points": 3
+        },
+        {
+          "id": "few_basic",
+          "label": "A few individuals have basic knowledge",
+          "points": 1,
+          "tags": ["devops_foundations"]
+        },
+        {
+          "id": "little",
+          "label": "The team has little practical experience",
+          "points": 0,
+          "tags": ["devops_foundations"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["devops_foundations"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q05",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "devops_foundations",
+      "text": "How confidently does the team use Git, branching, pull requests, reviews, and conflict resolution?",
+      "options": [
+        {
+          "id": "consistent_review",
+          "label": "The team uses a consistent, review-based workflow",
+          "points": 5
+        },
+        {
+          "id": "varies",
+          "label": "Most contributors use Git, but practices vary",
+          "points": 3
+        },
+        {
+          "id": "basic_commits",
+          "label": "Git is used for basic commits but collaboration is inconsistent",
+          "points": 1,
+          "tags": ["devops_foundations"]
+        },
+        {
+          "id": "manual_sharing",
+          "label": "The team relies heavily on manual file sharing or direct server changes",
+          "points": 0,
+          "tags": ["devops_foundations"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["devops_foundations"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q06",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "devops_foundations",
+      "text": "How well does the team understand cloud accounts, environments, identity, networking, compute, storage, and managed services?",
+      "options": [
+        {
+          "id": "independent",
+          "label": "The team can design and operate common cloud environments independently",
+          "points": 5
+        },
+        {
+          "id": "basics",
+          "label": "The team understands the basics but needs guidance for real projects",
+          "points": 3
+        },
+        {
+          "id": "concentrated",
+          "label": "Knowledge is concentrated in one or two people",
+          "points": 1,
+          "tags": ["devops_foundations"]
+        },
+        {
+          "id": "limited",
+          "label": "The team has limited cloud exposure",
+          "points": 0,
+          "tags": ["devops_foundations"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["devops_foundations"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q07",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "ci_cd_release_engineering",
+      "text": "Can the team build an automated pipeline that validates code after a commit or pull request?",
+      "options": [
+        {
+          "id": "design",
+          "label": "Yes, the team can design, maintain, and troubleshoot build pipelines",
+          "points": 5
+        },
+        {
+          "id": "maintain",
+          "label": "The team can maintain existing pipelines but needs help designing them",
+          "points": 3
+        },
+        {
+          "id": "one_person",
+          "label": "One person can do it with limited team understanding",
+          "points": 1,
+          "tags": ["ci_cd"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["ci_cd"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["ci_cd"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q08",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "ci_cd_release_engineering",
+      "text": "Can the team select and integrate appropriate automated tests into the delivery pipeline?",
+      "options": [
+        {
+          "id": "full",
+          "label": "Yes, including suitable unit, integration, and acceptance tests",
+          "points": 5
+        },
+        {
+          "id": "basic",
+          "label": "The team can integrate basic tests but needs guidance on coverage and design",
+          "points": 3
+        },
+        {
+          "id": "manual",
+          "label": "Tests exist but are mostly manual or inconsistent",
+          "points": 1,
+          "tags": ["testing"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["testing"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["testing"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q09",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "ci_cd_release_engineering",
+      "text": "Can the team implement a repeatable deployment process across development, staging, and production?",
+      "options": [
+        {
+          "id": "automated",
+          "label": "Yes, using automated promotion and environment controls",
+          "points": 5
+        },
+        {
+          "id": "templates",
+          "label": "The team can deploy with templates or supervision",
+          "points": 3
+        },
+        {
+          "id": "manual",
+          "label": "Deployments are largely manual",
+          "points": 1,
+          "tags": ["ci_cd"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["ci_cd"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["ci_cd"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "ci_cd_release_engineering",
+      "text": "Can the team design and operate approvals, progressive releases, rollback, and release verification?",
+      "options": [
+        {
+          "id": "tested",
+          "label": "Yes, the team uses tested release-safety patterns",
+          "points": 5
+        },
+        {
+          "id": "concepts",
+          "label": "The team understands the concepts but needs practical implementation",
+          "points": 3
+        },
+        {
+          "id": "manual",
+          "label": "Rollback is manual or depends on an individual",
+          "points": 1,
+          "tags": ["release_safety"]
+        },
+        {
+          "id": "none",
+          "label": "No defined rollback process exists",
+          "points": 0,
+          "tags": ["release_safety"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["release_safety"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q11",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "iac_cloud_operations",
+      "text": "How capable is the team of using Terraform, CloudFormation, CDK, Pulumi, or another Infrastructure as Code tool?",
+      "options": [
+        {
+          "id": "modules",
+          "label": "The team writes reusable modules, reviews changes, and manages state safely",
+          "points": 5
+        },
+        {
+          "id": "templates",
+          "label": "The team can use existing templates but needs help creating standards",
+          "points": 3
+        },
+        {
+          "id": "one_person",
+          "label": "One person has basic exposure",
+          "points": 1,
+          "tags": ["iac_cloud_operations"]
+        },
+        {
+          "id": "manual",
+          "label": "Infrastructure is configured manually",
+          "points": 0,
+          "tags": ["iac_cloud_operations"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["iac_cloud_operations"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q12",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "iac_cloud_operations",
+      "text": "Can the team create consistent environments and manage configuration and secrets securely?",
+      "help": "We never ask you to share a secret. This is about how they are handled, not what they are.",
+      "options": [
+        {
+          "id": "templates",
+          "label": "Yes, using reusable templates and secure configuration or secret stores",
+          "points": 5
+        },
+        {
+          "id": "drift",
+          "label": "The team follows some standards but environment drift occurs",
+          "points": 3
+        },
+        {
+          "id": "manual",
+          "label": "Configuration is mostly manual",
+          "points": 1,
+          "tags": ["iac_cloud_operations"]
+        },
+        {
+          "id": "insecure",
+          "label": "Secrets or configuration are handled insecurely",
+          "points": 0,
+          "tags": ["devsecops"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["iac_cloud_operations"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q13",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "iac_cloud_operations",
+      "text": "Can the team independently manage cloud identity, networking, compute, storage, cost, and operational issues?",
+      "options": [
+        {
+          "id": "yes",
+          "label": "Yes, across the main services used by the organisation",
+          "points": 5
+        },
+        {
+          "id": "common",
+          "label": "The team manages common tasks but needs specialist support",
+          "points": 3
+        },
+        {
+          "id": "few_people",
+          "label": "A small number of people handle most operations",
+          "points": 1,
+          "tags": ["iac_cloud_operations"]
+        },
+        {
+          "id": "outsourced",
+          "label": "Operations are mostly outsourced or reactive",
+          "points": 0,
+          "tags": ["iac_cloud_operations"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["iac_cloud_operations"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q14",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "containers_platform_engineering",
+      "text": "How capable is the team of building, securing, deploying, and troubleshooting containers?",
+      "options": [
+        {
+          "id": "production",
+          "label": "The team can operate containerised applications in production",
+          "points": 5
+        },
+        {
+          "id": "support",
+          "label": "The team uses containers but needs support with production practices",
+          "points": 3
+        },
+        {
+          "id": "local",
+          "label": "The team has basic local-development exposure",
+          "points": 1,
+          "tags": ["containers_platform"]
+        },
+        {
+          "id": "none",
+          "label": "No practical container experience",
+          "points": 0,
+          "tags": ["containers_platform"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["containers_platform"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q15",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "containers_platform_engineering",
+      "text": "Can the team work with Kubernetes, ECS, serverless platforms, internal platforms, or reusable developer workflows?",
+      "options": [
+        {
+          "id": "design",
+          "label": "The team can design and operate platform capabilities with appropriate guardrails",
+          "points": 5
+        },
+        {
+          "id": "use",
+          "label": "The team can use an existing platform but not yet design one",
+          "points": 3
+        },
+        {
+          "id": "evaluating",
+          "label": "The organisation is evaluating these capabilities",
+          "points": 1,
+          "tags": ["platform_engineering"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["platform_engineering"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["platform_engineering"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q16",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "containers_platform_engineering",
+      "text": "How effectively can the team automate repetitive operational or delivery tasks?",
+      "options": [
+        {
+          "id": "maintainable",
+          "label": "The team creates maintainable scripts, workflows, and automation with tests and documentation",
+          "points": 5
+        },
+        {
+          "id": "varies",
+          "label": "The team automates common tasks but standards vary",
+          "points": 3
+        },
+        {
+          "id": "one_off",
+          "label": "Automation is mostly one-off scripts owned by individuals",
+          "points": 1,
+          "tags": ["automation"]
+        },
+        {
+          "id": "manual",
+          "label": "Work is primarily manual",
+          "points": 0,
+          "tags": ["automation"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["automation"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q17",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "devsecops",
+      "text": "Can the team integrate identity controls, secrets management, dependency scanning, image scanning, and Infrastructure as Code security checks?",
+      "options": [
+        {
+          "id": "integrated",
+          "label": "Yes, security controls are integrated and continuously improved",
+          "points": 5
+        },
+        {
+          "id": "some",
+          "label": "Some controls are automated",
+          "points": 3
+        },
+        {
+          "id": "manual_late",
+          "label": "Security checks are mostly manual or late",
+          "points": 1,
+          "tags": ["devsecops"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["devsecops"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["devsecops"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q18",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "observability_reliability",
+      "text": "Can the team implement useful logs, metrics, traces, dashboards, alerts, and service-health indicators?",
+      "options": [
+        {
+          "id": "actionable",
+          "label": "Yes, with actionable alerts and clear ownership",
+          "points": 5
+        },
+        {
+          "id": "existing",
+          "label": "The team can use existing monitoring but needs help designing coverage",
+          "points": 3
+        },
+        {
+          "id": "basic",
+          "label": "Monitoring is basic or inconsistent",
+          "points": 1,
+          "tags": ["observability"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["observability"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["observability"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q19",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "observability_reliability",
+      "text": "Can the team respond to incidents, use runbooks, restore services, and learn from failures?",
+      "options": [
+        {
+          "id": "defined",
+          "label": "Yes, with defined roles, tested runbooks, recovery objectives, and post-incident reviews",
+          "points": 5
+        },
+        {
+          "id": "inconsistent",
+          "label": "The team handles incidents but practices are inconsistent",
+          "points": 3
+        },
+        {
+          "id": "individual",
+          "label": "Response depends on individual experience",
+          "points": 1,
+          "tags": ["reliability"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["reliability"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["reliability"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q20",
+      "section": 7,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "team_enablement",
+      "text": "Is there a person accountable for coordinating the training, removing blockers, and tracking outcomes?",
+      "options": [
+        {
+          "id": "formal",
+          "label": "Yes, with clear authority and responsibilities",
+          "points": 5
+        },
+        {
+          "id": "likely_informal",
+          "label": "Someone is likely to coordinate it, but ownership is not formal",
+          "points": 3
+        },
+        {
+          "id": "shared",
+          "label": "Responsibility will be shared informally",
+          "points": 1,
+          "tags": ["training_ownership"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["training_ownership"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["training_ownership"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q21",
+      "section": 7,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "team_enablement",
+      "text": "Will learners have protected time to attend training, complete labs, and apply the skills to real work?",
+      "options": [
+        {
+          "id": "planned",
+          "label": "Yes, with planned time for sessions, labs, and application",
+          "points": 5
+        },
+        {
+          "id": "competes",
+          "label": "Time is available but may compete with delivery work",
+          "points": 3
+        },
+        {
+          "id": "when_permits",
+          "label": "Learners will study only when workloads permit",
+          "points": 1,
+          "tags": ["learning_enablement"]
+        },
+        {
+          "id": "none",
+          "label": "No protected time is available",
+          "points": 0,
+          "tags": ["learning_enablement"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["learning_enablement"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q22",
+      "section": 7,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "team_enablement",
+      "text": "How will the organisation ensure that new skills become standard team practice after training?",
+      "options": [
+        {
+          "id": "structured",
+          "label": "Through projects, documentation, champions, reviews, and follow-up measurement",
+          "points": 5
+        },
+        {
+          "id": "encourage",
+          "label": "Managers plan to encourage application but no formal plan exists",
+          "points": 3
+        },
+        {
+          "id": "individual",
+          "label": "The organisation mainly expects learners to apply skills individually",
+          "points": 1,
+          "tags": ["learning_enablement"]
+        },
+        {
+          "id": "none",
+          "label": "No handover or adoption plan exists",
+          "points": 0,
+          "tags": ["learning_enablement"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["learning_enablement"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q23",
+      "section": 8,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "outcomes_and_format",
+      "text": "How will you measure whether the training produced value?",
+      "options": [
+        {
+          "id": "deliverables",
+          "label": "Through practical deliverables and operational or delivery metrics",
+          "points": 5
+        },
+        {
+          "id": "feedback",
+          "label": "Through attendance, feedback, and selected practical exercises",
+          "points": 3
+        },
+        {
+          "id": "certificates",
+          "label": "Mainly through completion or certificates",
+          "points": 1,
+          "tags": ["outcomes_measurement"]
+        },
+        {
+          "id": "undefined",
+          "label": "We have not defined success measures",
+          "points": 0,
+          "tags": ["outcomes_measurement"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["outcomes_measurement"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q24",
+      "section": 8,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "outcomes_and_format",
+      "text": "Which training approach would best fit your organisation?",
+      "help": "This shapes the suggested delivery format more than your score. Project-based work scores highest because it ends with something running.",
+      "options": [
+        {
+          "id": "workshop",
+          "label": "Short focused workshop",
+          "points": 3,
+          "tags": ["workshop"]
+        },
+        {
+          "id": "cohort",
+          "label": "Multi-week cohort with labs and mentoring",
+          "points": 3,
+          "tags": ["cohort"]
+        },
+        {
+          "id": "project_based",
+          "label": "Project-based training using our own application",
+          "points": 5,
+          "tags": ["project_based"]
+        },
+        {
+          "id": "train_the_trainer",
+          "label": "Train-the-trainer programme for internal champions",
+          "points": 3,
+          "tags": ["train_the_trainer"]
+        },
+        {
+          "id": "coaching",
+          "label": "Ongoing coaching or managed enablement",
+          "points": 3,
+          "tags": ["coaching_managed_enablement"]
+        },
+        {
+          "id": "unsure",
+          "label": "We are not sure",
+          "points": 0,
+          "tags": ["training_discovery"]
+        }
+      ]
+    }
+  ],
+  "lead_fields": [
+    {
+      "id": "L01",
+      "type": "text",
+      "required": true,
+      "text": "What is your name?",
+      "max_length": 120
+    },
+    {
+      "id": "L02",
+      "type": "contact",
+      "required": true,
+      "text": "How should we reach you?",
+      "channels": [
+        {
+          "id": "email",
+          "label": "Work email",
+          "validate": "email"
+        }
+      ]
+    },
+    {
+      "id": "L03",
+      "type": "single",
+      "required": true,
+      "text": "What best describes your role?",
+      "options": [
+        {
+          "id": "founder",
+          "label": "Founder or business owner"
+        },
+        {
+          "id": "cto",
+          "label": "CTO or technical director"
+        },
+        {
+          "id": "eng_manager",
+          "label": "Engineering manager or technical lead"
+        },
+        {
+          "id": "devops_lead",
+          "label": "DevOps, cloud, platform, or SRE lead"
+        },
+        {
+          "id": "it_manager",
+          "label": "IT manager"
+        },
+        {
+          "id": "hr_ld",
+          "label": "HR, L&D, or talent-development manager"
+        },
+        {
+          "id": "finance_ops",
+          "label": "Finance or operations manager"
+        },
+        {
+          "id": "consultant",
+          "label": "Consultant or agency"
+        },
+        {
+          "id": "other",
+          "label": "Other"
+        }
+      ]
+    },
+    {
+      "id": "L04",
+      "type": "multi",
+      "required": true,
+      "max_selections": 3,
+      "text": "What would you like the team to achieve first?",
+      "help": "Choose up to three.",
+      "options": [
+        {
+          "id": "foundations",
+          "label": "Learn DevOps foundations"
+        },
+        {
+          "id": "ci_cd",
+          "label": "Build or improve CI/CD"
+        },
+        {
+          "id": "iac",
+          "label": "Automate infrastructure with IaC"
+        },
+        {
+          "id": "cloud_ops",
+          "label": "Improve cloud operations"
+        },
+        {
+          "id": "containers_platform",
+          "label": "Adopt containers or platform engineering"
+        },
+        {
+          "id": "security",
+          "label": "Improve security in delivery"
+        },
+        {
+          "id": "monitoring_reliability",
+          "label": "Improve monitoring, reliability, and incident response"
+        },
+        {
+          "id": "certification",
+          "label": "Prepare for certification"
+        }
+      ]
+    },
+    {
+      "id": "L05",
+      "type": "text",
+      "required": true,
+      "text": "What is your company called?",
+      "max_length": 160
+    },
+    {
+      "id": "L06",
+      "type": "checkbox",
+      "required": false,
+      "wording_version": "training-consent-1.0",
+      "text": "Send me my report and occasional DevOps training guidance from Cloudboosta.",
+      "default": false,
+      "gates_result": false
+    },
+    {
+      "id": "L07",
+      "type": "single",
+      "required": false,
+      "text": "Where are you based?",
+      "options": [
+        {
+          "id": "NG",
+          "label": "Nigeria"
+        },
+        {
+          "id": "GB",
+          "label": "United Kingdom"
+        },
+        {
+          "id": "US",
+          "label": "United States"
+        },
+        {
+          "id": "CA",
+          "label": "Canada"
+        },
+        {
+          "id": "ZA",
+          "label": "South Africa"
+        },
+        {
+          "id": "KE",
+          "label": "Kenya"
+        },
+        {
+          "id": "GH",
+          "label": "Ghana"
+        },
+        {
+          "id": "other",
+          "label": "Somewhere else"
+        }
+      ]
+    }
+  ],
+  "payload_map": {
+    "fields": {
+      "roles": {
+        "field": "Q01",
+        "mode": "labels"
+      },
+      "learner_count": {
+        "field": "Q02",
+        "mode": "label"
+      },
+      "main_outcome": {
+        "field": "Q03",
+        "mode": "label"
+      },
+      "preferred_format": {
+        "field": "Q24",
+        "mode": "label"
+      },
+      "name": {
+        "field": "L01",
+        "mode": "raw"
+      },
+      "contact": {
+        "field": "L02",
+        "mode": "raw"
+      },
+      "role": {
+        "field": "L03",
+        "mode": "label"
+      },
+      "desired_help": {
+        "field": "L04",
+        "mode": "labels"
+      },
+      "main_goal": {
+        "field": "L04",
+        "mode": "labels"
+      },
+      "company": {
+        "field": "L05",
+        "mode": "raw"
+      },
+      "country": {
+        "field": "L07",
+        "mode": "value"
+      }
+    },
+    "context": [
+      "roles",
+      "learner_count",
+      "main_outcome",
+      "preferred_format",
+      "main_goal"
+    ],
+    "consent_field": "L06"
+  },
+  "copy": {
+    "landing": {
+      "eyebrow": "Free assessment",
+      "title": "What does your team actually need to learn next?",
+      "body": "Answer 24 short questions about your team's foundations, delivery practices, cloud operations, security, reliability, and readiness to learn. You will get a capability score, your primary capability gap, up to three learning tracks, a suggested delivery format, and three practical next steps.",
+      "meta": [
+        "Takes 6–8 minutes",
+        "No repository or cloud access needed",
+        "Measures the team, not any individual"
+      ],
+      "start": "Start the assessment"
+    },
+    "result": {
+      "intro": "Your Team DevOps Capability Score shows how prepared your team is to apply DevOps practices consistently in real delivery and operations work.",
+      "disclaimer": "This result is based on your answers and is not an individual skills test, certification, technical audit, or guarantee of training outcomes. A tailored programme requires a strategy session with our team.",
+      "primary_heading": "Your primary capability gap",
+      "secondary_heading": "Also worth a learning track",
+      "actions_heading": "Three things to do next",
+      "direction_heading": "Suggested delivery format",
+      "direction_note": "One suggested shape for the programme, not a curriculum. Which of the five fits depends on how many people are learning, how focused the gap is, and what the team needs after the sessions end — and the strategy session is where that is settled.",
+      "cta": "Book a DevOps team training strategy session",
+      "cta_support": "Discuss your team's goals, capability gaps, and preferred learning format with our training team.",
+      "email_heading": "Your full report is on its way",
+      "email_body_email": "We have sent the complete breakdown to {contact} — every finding, the reasoning behind it, and the three things to do first.",
+      "email_hint": "It usually arrives within a minute. If it does not, check your spam folder before assuming it went missing.",
+      "email_failed_heading": "We could not send your report",
+      "email_failed_body": "Your score and findings are on this screen, and nothing has been lost. We will retry shortly — if it does not arrive, reply to any Cloudboosta message and we will send it by hand."
+    },
+    "consent_note": "We will only email or message you beyond this result if you tick the box below.",
+    "findings": {
+      "devops_foundations": {
+        "title": "DevOps foundations",
+        "body": "Start with a practical DevOps foundation covering Linux, networking, Git, cloud concepts, environments, and the software-delivery lifecycle.",
+        "actions": [
+          "Run a short skills check on Linux, networking, and Git with the actual team, so the foundation course starts where they are rather than where the syllabus assumes.",
+          "Put every contributor on one review-based Git workflow this month — protected main branch, pull requests, one named reviewer — and treat the first merge conflict as a lesson, not a crisis.",
+          "Give the team a sandbox cloud account with a budget cap and a weekly task, so cloud concepts are learned by building something small and deleting it again."
+        ]
+      },
+      "ci_cd_release_engineering": {
+        "title": "CI/CD and release engineering",
+        "body": "Prioritise a hands-on CI/CD programme that builds a working pipeline for a representative application and includes testing, promotion, approvals, monitoring, and rollback.",
+        "actions": [
+          "Choose one representative application and make building its pipeline the training project — the team leaves with something running, not a certificate.",
+          "Have the team, not the trainer, write the pipeline configuration into the repository, so the knowledge lives with the code rather than with whoever ran the workshop.",
+          "Rehearse a rollback on a normal working day as the final exercise, and record how long it took; that number is the before-and-after measure."
+        ]
+      },
+      "iac_cloud_operations": {
+        "title": "Infrastructure as Code and cloud operations",
+        "body": "Train the team on Infrastructure as Code, cloud networking, identity, environment design, change review, and repeatable operations.",
+        "actions": [
+          "Pick one environment the team can afford to break and have them rebuild it from code during the programme, with state stored somewhere safer than a laptop.",
+          "Move configuration and secrets into a managed secret store as a training exercise, so the team learns the pattern on its own values rather than a demo.",
+          "Rotate cloud operations tasks across the whole team for a month after training, so knowledge stops sitting in the one or two people it currently sits in."
+        ]
+      },
+      "containers_platform_engineering": {
+        "title": "Containers and platform engineering",
+        "body": "Consider containerisation and platform-engineering training focused on reusable templates, deployment standards, self-service, and operational guardrails.",
+        "actions": [
+          "Containerise one real service end to end — build, scan, deploy, troubleshoot — before anyone opens a Kubernetes slide.",
+          "Turn whatever the strongest team already does into a template the others start from, and make improving that template part of the training.",
+          "Replace the one-off scripts owned by individuals with a shared, documented automation repository, and review changes to it the way you review application code."
+        ]
+      },
+      "devsecops": {
+        "title": "DevSecOps",
+        "body": "Add a DevSecOps track covering secrets, identity, dependency and image scanning, Infrastructure as Code checks, vulnerability handling, and secure pipeline controls.",
+        "actions": [
+          "Add dependency and container-image scanning to the pipeline the team builds in training, so security arrives as part of delivery rather than as a separate course.",
+          "Have the team take every secret out of source, chat, and shared documents during the programme, and put the managed store they move to under review.",
+          "Agree who owns a security finding, how severity is set, and how fast it must be fixed — before the first scan produces one."
+        ]
+      },
+      "observability_reliability": {
+        "title": "Observability and reliability",
+        "body": "Train the team to build actionable observability, define service-health indicators, respond to incidents, test recovery, and improve reliability.",
+        "actions": [
+          "Build one dashboard per critical service during training that answers \"is this healthy right now\", and delete every alert nobody would act on.",
+          "Write down who leads an incident, who communicates, and how it escalates — then run a tabletop exercise on the last real outage to test it.",
+          "Restore a backup into a scratch environment as a training exercise and time it. Recovery that has never been rehearsed is a belief, not a capability."
+        ]
+      },
+      "team_enablement": {
+        "title": "Team enablement and operating model",
+        "body": "Combine technical training with role definition, internal documentation, pairing, office hours, and a handover plan so capability remains after the programme.",
+        "actions": [
+          "Name one accountable training owner with the authority to remove blockers, and put their name on the programme before the first session is booked.",
+          "Block the practice time in calendars now — sessions, labs, and application to real work — and treat it as delivery work, because it is.",
+          "Decide how the new skills become the standard: which projects they land in, who the internal champions are, and what you will measure in three months."
+        ]
+      },
+      "outcomes_and_format": {
+        "title": "Outcomes, measurement, and format",
+        "body": "Your primary gap is not a technical skill but the definition of the programme itself: what the training is for, how you will know it worked, and what shape it should take. Decide the outcome, the success measures, and the delivery format before choosing a syllabus — training without a defined outcome produces attendance, and attendance is not a capability.",
+        "actions": [
+          "Write down the one outcome the training must produce — a pipeline, a rebuilt environment, a shorter recovery time — in a sentence the whole leadership team agrees with.",
+          "Choose two operational or delivery metrics to measure before and after the programme, so success is something you can show rather than something you feel.",
+          "Pick the delivery format on the evidence — learner count, how focused the gap is, what support the team needs afterwards — rather than on what is easiest to schedule."
+        ]
+      },
+      "continuous_improvement": {
+        "title": "Advanced enablement",
+        "body": "No single track stands out as your primary gap, which at this level is the finding. The work now is platform engineering, reliability, optimisation, leadership, and continuous improvement — holding the capability the team has and making it the standard rather than the exception.",
+        "actions": [
+          "Turn your strongest practices into reusable templates and guardrails, so the next team does not have to learn them the hard way.",
+          "Give senior engineers a deliberate teaching role — pairing, office hours, internal workshops — so capability spreads rather than concentrates.",
+          "Re-run this assessment in six months with a different person answering, and compare, rather than trusting the impression."
+        ]
+      },
+      "managed_enablement": {
+        "title": "Ongoing coaching or managed enablement may fit",
+        "body": "Based on your answers, ongoing coaching or managed enablement is likely to fit: it is recommended when the organisation has limited internal DevOps expertise, the team needs support after training, or there is a critical production platform or transformation programme. We deliver the programme, stay with the team while the skills are applied to real work, and transfer the capability rather than keeping it.",
+        "actions": []
+      }
+    },
+    "directions": {
+      "discovery_first": {
+        "title": "Do not choose a format yet",
+        "short": "Discovery first",
+        "body": "You are not sure what outcome you want from the training and not sure how it should be delivered, which is an honest place to start and the wrong place to choose a format from. A short discovery conversation settles both; choosing a format before it would mean designing the programme around a guess."
+      },
+      "workshop": {
+        "title": "Workshop",
+        "short": "A short, focused intervention",
+        "body": "A workshop is recommended when the team has fewer than 10 learners, the gap is focused, the organisation needs a short intervention, and the target outcome is awareness or a specific capability. It is the right size for one gap and the wrong size for a team that needs to change how it works."
+      },
+      "cohort_programme": {
+        "title": "Cohort programme",
+        "short": "Multi-week, with labs and mentoring",
+        "body": "A cohort programme is recommended when the team has 5–25 learners, capability is uneven, the organisation wants structured practice and mentoring, and a multi-week implementation pathway is appropriate. It is the default here because most teams are uneven, and unevenness is what a cohort is built to close."
+      },
+      "project_based_enablement": {
+        "title": "Project-based enablement",
+        "short": "Build it on your own application",
+        "body": "Project-based enablement is recommended when the customer needs a working CI/CD pipeline, IaC environment, or monitoring platform, the team learns best by applying skills to its own application, and the organisation wants measurable implementation outcomes. The programme ends with something running, which is also the evidence that it worked."
+      },
+      "train_the_trainer": {
+        "title": "Train-the-trainer",
+        "short": "Build internal champions",
+        "body": "Train-the-trainer is recommended when the organisation has a larger engineering population, wants internal champions, and the programme must scale across teams or locations. It multiplies the training rather than replacing it, and the champions need protected time as much as the learners do."
+      },
+      "ongoing_coaching": {
+        "title": "Ongoing coaching or managed enablement",
+        "short": "Support that continues after the sessions",
+        "body": "Ongoing coaching or managed enablement is recommended when the organisation has limited internal DevOps expertise, the team needs support after training, or there is a critical production platform or transformation programme. Training gives a team the skills; coaching is what stops them evaporating in the first difficult week."
+      }
+    },
+    "email": {
+      "product": "DevOps Team Training Assessment",
+      "score_label": "Team DevOps Capability Score",
+      "report_line": "Here is your full Team DevOps Capability report.",
+      "operator_summary": [
+        {
+          "label": "Learners",
+          "key": "learner_count"
+        },
+        {
+          "label": "Roles",
+          "key": "roles"
+        },
+        {
+          "label": "Outcome",
+          "key": "main_outcome"
+        },
+        {
+          "label": "Format",
+          "key": "preferred_format"
+        }
+      ]
+    }
+  }
+}

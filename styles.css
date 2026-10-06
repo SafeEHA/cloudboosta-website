@@ -1,0 +1,1411 @@
+/* ==========================================================================
+   Cloud Optimisation Assessment — "Centre Line", restyled NIGHTSHIFT
+
+   The structure is direction D, approved 24 August 2026. The skin is the
+   company's NIGHTSHIFT design (public/site/site.css), adopted 25 August 2026
+   so the assessment and the marketing site read as one product: near-black
+   surfaces, white ink, brand blue as the only light source, photographs under
+   gradient scrims. Dark is the DEFAULT; light is the opt-in.
+
+   1. NO CHAPTER COLOUR. The six hues are removed, not replaced. Everything is
+      graphite and Cloudboosta blue is rationed to three jobs: where you are,
+      what to press, and how far you got. A chapter is identified by its
+      number and its name.
+
+   2. THE MARGINS ARE ARCHITECTURE. .measure is a centred column with two
+      hairlines running its full height, and a mono label gutter inside the
+      left one. On a wide monitor the space either side is a bounded margin
+      rather than the leftover a single-column stage produces.
+
+   3. THE CHAPTER GROUND IS A PHOTOGRAPH UNDER A SCRIM, THE SAME FOR ALL SIX.
+      A datacentre at night, under a gradient from rgba(5,7,12,.55) to solid
+      #05070C, so the panel is at least as dark as the page at its darkest
+      point and white ink (#F4F6FB) clears AA everywhere on it. It is identical
+      in both themes - the one screen in the product that does not change with
+      the theme, on purpose: the chapter opening is a cinematic beat, not a
+      surface.
+
+   4. THE RESULT KEEPS THE ROADMAP from direction A, "The Calibration Bench":
+      a ticked track, a fill, a needle carrying its own flag, and a five-cell
+      band strip where only the band you landed in lights. Showing all five is
+      the persuasion - the distance to "Optimised" is the product.
+
+   The Content-Security-Policy in netlify.toml carries no 'unsafe-inline'.
+   No inline style attribute, no inline script. Values that look continuous
+   ship as classes - rail fill .f-0 .. .f-100, needle .m0 .. .m100 - and are
+   generated at the end of this file. The two the engine cannot know ahead of
+   time (the fill width, the counting number) are written through the CSSOM,
+   which CSP does not block.
+   ========================================================================== */
+
+/* ============================================================
+   Token layer. Every colour is declared here, on bare :root, so
+   the un-stamped default state has a complete palette. NIGHTSHIFT
+   is dark-first, so the bare root IS the dark palette; the light
+   block below only REDEFINES these, never introduces a new one.
+   ============================================================ */
+:root,
+.theme-dark {
+  color-scheme: dark;
+
+  /* surfaces - the site's --bg / --bg2 / --bg3 */
+  --bg:            #05070C;
+  --surface:       #0A0E1A;
+  --surface-alt:   #101728;
+  --surface-sunk:  #0D1322;
+
+  /* the chapter opening: a photograph under a near-black scrim, so white ink
+     clears AA. Identical in both themes. */
+  --ground:        #05070C;
+  --on-ground:     #F4F6FB;
+  --on-ground-2:   #B9C1D3;
+  --ground-line:   rgba(255,255,255,.22);
+  --ground-line-2: rgba(255,255,255,.12);
+
+  /* ink */
+  --ink:    #F4F6FB;
+  --ink-2:  #B9C1D3;
+  --ink-3:  #7F89A2;
+  --ink-4:  #8590A8;   /* 5.3:1 on #0A0E1A - it carries small mono labels */
+
+  /* hairlines */
+  --line:   rgba(255,255,255,.10);
+  --line-2: rgba(255,255,255,.20);
+  --rule:   rgba(255,255,255,.12);
+
+  /* the one accent. --accent is the readable blue for text, keys and
+     position; --accent-fill is the deeper brand blue reserved for the
+     surface of a button, where white sits on it. */
+  --accent:            #4F6BFF;
+  --accent-deep:       #93A6FF;
+  --accent-soft:       rgba(23,54,255,.14);
+  --accent-fill:       #1736FF;
+  --accent-fill-hover: #4F6BFF;
+  --on-accent:         #FFFFFF;
+  --focus:             #93A6FF;
+
+  /* the band scale: graphite warming into blue as the score rises.
+     Colour arrives only at the top, so it is earned rather than assigned. */
+  --band-1: #39435A;
+  --band-2: #55617D;
+  --band-3: #7F89A2;
+  --band-4: #4F6BFF;
+  --band-5: #93A6FF;
+
+  /* failure. The only non-blue chroma in the product, used once. */
+  --warn:      #FF8A9B;
+  --warn-soft: rgba(255,138,155,.12);
+
+  --shadow-lift: 0 1px 0 rgba(255,255,255,.04), 0 10px 26px -14px rgba(0,0,0,.7);
+
+  --ease:       cubic-bezier(.22,.61,.36,1);
+  --ease-out:   cubic-bezier(.16,.84,.44,1);
+  --dur-fast:   140ms;
+  --dur:        260ms;
+  --dur-travel: 380ms;
+}
+
+/* Light — an explicit choice, so it wins over the OS in both directions. */
+:root[data-theme="light"],
+.theme-light {
+  color-scheme: light;
+
+  --bg:            #F6F7F9;
+  --surface:       #FFFFFF;
+  --surface-alt:   #F0F2F5;
+  --surface-sunk:  #E9ECF1;
+
+  --ground:        #05070C;
+  --on-ground:     #F4F6FB;
+  --on-ground-2:   #B9C1D3;
+  --ground-line:   rgba(255,255,255,.22);
+  --ground-line-2: rgba(255,255,255,.12);
+
+  --ink:    #0F141C;
+  --ink-2:  #39424F;
+  --ink-3:  #5C6675;
+  --ink-4:  #6B7583;   /* 4.67:1 on white */
+
+  --line:   #E4E7EC;
+  --line-2: #C8CDD6;
+  --rule:   #D9DDE4;
+
+  --accent:            #1736FF;
+  --accent-deep:       #0E25CC;
+  --accent-soft:       #EBEFFE;
+  --accent-fill:       #1736FF;
+  --accent-fill-hover: #0E25CC;
+  --on-accent:         #FFFFFF;
+  --focus:             #1736FF;
+
+  --band-1: #A8B0BC;
+  --band-2: #7C8797;
+  --band-3: #4E5D77;
+  --band-4: #2A44C4;
+  --band-5: #1736FF;
+
+  --warn:      #B02038;
+  --warn-soft: rgba(176,32,56,.07);
+
+  --shadow-lift: 0 1px 2px rgba(15,20,28,.05), 0 8px 20px -12px rgba(15,20,28,.22);
+}
+
+/* Dark — the OS preference, unless the viewer has forced light. The same
+   values as the bare root; it exists so an OS-dark viewer who has never
+   touched the switch is never handed the light override by a stale stamp. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg:            #05070C;
+    --surface:       #0A0E1A;
+    --surface-alt:   #101728;
+    --surface-sunk:  #0D1322;
+
+    --ground:        #05070C;
+    --on-ground:     #F4F6FB;
+    --on-ground-2:   #B9C1D3;
+    --ground-line:   rgba(255,255,255,.22);
+    --ground-line-2: rgba(255,255,255,.12);
+
+    --ink:    #F4F6FB;
+    --ink-2:  #B9C1D3;
+    --ink-3:  #7F89A2;
+    --ink-4:  #8590A8;
+
+    --line:   rgba(255,255,255,.10);
+    --line-2: rgba(255,255,255,.20);
+    --rule:   rgba(255,255,255,.12);
+
+    --accent:            #4F6BFF;
+    --accent-deep:       #93A6FF;
+    --accent-soft:       rgba(23,54,255,.14);
+    --accent-fill:       #1736FF;
+    --accent-fill-hover: #4F6BFF;
+    --on-accent:         #FFFFFF;
+    --focus:             #93A6FF;
+
+    --band-1: #39435A;
+    --band-2: #55617D;
+    --band-3: #7F89A2;
+    --band-4: #4F6BFF;
+    --band-5: #93A6FF;
+
+    --warn:      #FF8A9B;
+    --warn-soft: rgba(255,138,155,.12);
+
+    --shadow-lift: 0 1px 0 rgba(255,255,255,.04), 0 10px 26px -14px rgba(0,0,0,.7);
+  }
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  --q: clamp(1.6rem, 3.4vw, 2.6rem);
+}
+
+/* Theme switching is animated only for the moment it takes. The class is
+   added on click and removed a beat later, so nothing transitions during
+   ordinary rendering - which is what makes a global transition feel cheap. */
+html.is-theming,
+html.is-theming body,
+html.is-theming .chrome,
+html.is-theming .measure,
+html.is-theming .gutter,
+html.is-theming .opt,
+html.is-theming .scale__track,
+html.is-theming .panel {
+  transition: background-color 240ms var(--ease), color 240ms var(--ease),
+              border-color 240ms var(--ease);
+}
+
+/* main and #view both fill the viewport, so the one screen that asks for the
+   whole of it - the chapter opening - actually gets it: the photograph runs
+   to the foot of the window instead of stopping where its text does. */
+main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+#view { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 30;
+  background: var(--accent-fill); color: #FFFFFF;
+  padding: .8rem 1.2rem; border-radius: 0 0 6px 0;
+  font-weight: 600; text-decoration: none;
+}
+.skip-link:focus { left: 0; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+main:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.notice {
+  margin: 2rem auto; max-width: 40rem; padding: 1.25rem;
+  border: 1px solid var(--line-2); border-radius: 8px; background: var(--surface-alt);
+}
+
+.error:empty { display: none; }
+.error {
+  display: grid; gap: .3rem; margin: 0 0 1rem; padding: .85rem 1rem;
+  border-left: 2px solid var(--warn); background: var(--warn-soft);
+  color: var(--warn); font-size: .93rem; border-radius: 0 6px 6px 0;
+}
+
+[aria-invalid] .input,
+[aria-invalid] .select,
+[aria-invalid] .opt { border-color: var(--warn); }
+
+/* ==========================================================================
+   Progress rail — six chapters, width proportional to question count
+   ========================================================================== */
+.rail { display: flex; gap: 3px; height: 3px; flex: none; background: transparent; }
+.rail__seg { background: var(--line); position: relative; overflow: hidden; }
+.rail__seg > i {
+  position: absolute; inset: 0 auto 0 0; display: block;
+  background: var(--ink-4); width: 0;
+  transition: width var(--dur-travel) var(--ease);
+}
+.rail__seg.is-now  > i { background: var(--accent); }
+.rail__seg.is-done > i { background: var(--ink-4); }
+
+/* ==========================================================================
+   Chrome row — brand, position, and the theme switch
+   ========================================================================== */
+.chrome {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 13px clamp(18px, 4vw, 40px);
+  border-bottom: 1px solid var(--line);
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px; letter-spacing: .05em; color: var(--ink-3);
+  flex: none;
+}
+.chrome__l { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.chrome__r { display: flex; align-items: center; gap: 14px; flex: none; }
+.chrome__n { color: var(--accent); font-weight: 500; flex: none; }
+.chrome__name {
+  color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.chip-ns {
+  border: 1px solid var(--line-2); color: var(--ink-3); border-radius: 3px;
+  padding: 2px 7px; font-size: 10px; letter-spacing: .09em; text-transform: uppercase;
+}
+/* the wordmark, set as the marketing site sets it: Funnel Display 700, tight */
+.brandmark {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700; font-size: 15px;
+  letter-spacing: -.035em; color: var(--ink); text-transform: none;
+}
+
+/* home: the brandmark, made pressable. It is the only way out of the middle
+   of a twenty-question form that is not "close the tab". */
+.homebtn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; border: 1px solid transparent; border-radius: 5px;
+  padding: 4px 8px 4px 6px; margin-left: -6px; cursor: pointer; flex: none;
+  font: inherit; color: inherit;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.homebtn::before {
+  content: '←';
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--ink-4);
+  transform: translateX(2px);
+  transition: transform var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.homebtn:hover { background: var(--surface-alt); border-color: var(--line); }
+.homebtn:hover::before { transform: translateX(0); color: var(--accent); }
+.homebtn .brandmark { pointer-events: none; }
+
+.chapter .homebtn::before { color: var(--on-ground-2); }
+.chapter .homebtn:hover { background: var(--ground-line-2); border-color: var(--ground-line); }
+.chapter .homebtn:hover::before { color: var(--on-ground); }
+.chapter .brandmark { color: var(--on-ground); }
+
+/* the switch: a track and a knob, so which side is which is unmistakable */
+.themetog {
+  position: relative; flex: none;
+  width: 42px; height: 22px; padding: 0;
+  border: 1px solid var(--line-2); border-radius: 999px;
+  background: var(--surface-alt); cursor: pointer;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.themetog:hover { border-color: var(--ink-4); }
+.themetog__knob {
+  position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--ink-3);
+  transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+/* the knob is a filled disc in light, and a crescent in dark - the shape
+   carries the state as well as the position, for anyone who cannot see the
+   colour difference between the two ends of the track. */
+.themetog__knob::after {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: var(--surface-alt);
+  transform: translate(6px, -5px) scale(0);
+  transition: transform var(--dur) var(--ease);
+}
+.themetog[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.themetog[aria-pressed="true"] .themetog__knob { transform: translateX(20px); background: var(--accent); }
+.themetog[aria-pressed="true"] .themetog__knob::after { transform: translate(5px, -4px) scale(1); }
+
+/* ==========================================================================
+   THE CENTRE LINE
+   A centred measure, drawn. Two hairlines run the full height of the screen
+   and a mono gutter sits inside the left one.
+   ========================================================================== */
+.field-area {
+  flex: 1; display: flex; justify-content: center; min-height: 0;
+  background: var(--surface);
+}
+.measure {
+  width: min(64rem, 100%);
+  border-left: 1px solid var(--rule);
+  border-right: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 124px minmax(0, 1fr);
+  min-height: 0;
+}
+
+/* ---- the label gutter ---- */
+.gutter {
+  border-right: 1px solid var(--line);
+  padding: 36px 16px 22px 24px;
+  display: flex; flex-direction: column; gap: 24px;
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.gutter__n {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700;
+  font-size: 2.1rem; line-height: 1; letter-spacing: -.05em;
+  color: var(--accent); margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.gutter__lab {
+  font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-4); margin: 0 0 6px;
+}
+.gutter__val {
+  font-size: 11.5px; letter-spacing: .04em; color: var(--ink-2);
+  margin: 0; line-height: 1.55;
+  /* gutter values are written with newlines rather than <br>, so the helper
+     never has to accept markup - see gutterRow() in app.js */
+  white-space: pre-line;
+}
+.gutter__spacer { flex: 1; min-height: 10px; }
+
+/* position inside the chapter, as ticks rather than a number */
+.ticks { display: grid; gap: 4px; margin: 0 0 7px; }
+.ticks i { height: 2px; width: 20px; background: var(--line-2); display: block;
+  transition: width var(--dur) var(--ease), background var(--dur) var(--ease); }
+.ticks i.was { background: var(--ink-4); }
+.ticks i.on  { background: var(--accent); width: 32px; }
+
+/* ---- the content column ---- */
+.body {
+  padding: 36px clamp(20px, 3vw, 34px) 22px;
+  display: flex; flex-direction: column; gap: 22px; min-width: 0;
+}
+
+.q {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700;
+  font-size: var(--q); line-height: 1.08; letter-spacing: -.035em;
+  color: var(--ink); max-width: 22ch; margin: 0; text-wrap: balance;
+}
+.q--wide { font-size: calc(var(--q) * .8); max-width: 26ch; }
+.q--sm   { font-size: calc(var(--q) * .78); max-width: 26ch; }
+.help { font-size: 14.5px; color: var(--ink-3); margin: -12px 0 0; max-width: 52ch; }
+.eyebrow {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--accent); margin: 0;
+}
+.side__label {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink-4); margin: 0 0 6px;
+}
+
+/* ==========================================================================
+   Answers — rules, not cards. With no colour to lean on, the selected state
+   has to be unmistakable in form alone: filled key, weight change, solid edge.
+   ========================================================================== */
+.opts { display: grid; gap: 7px; margin: 0; padding: 0; border: 0; }
+.opts--two { grid-template-columns: 1fr 1fr; }
+
+.opt {
+  position: relative;
+  display: flex; align-items: center; gap: 14px;
+  min-height: 54px; padding: 10px 16px 10px 13px;
+  border: 1px solid var(--line);
+  border-left: 2px solid transparent;
+  border-radius: 6px; background: var(--surface); cursor: pointer;
+  overflow: hidden;
+  transition: background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+.opt:hover { background: var(--surface-alt); border-color: var(--line-2); }
+.opt:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.opt__key {
+  flex: none; width: 24px; height: 24px; border-radius: 4px;
+  border: 1px solid var(--line-2); background: var(--surface);
+  display: grid; place-items: center;
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: var(--ink-3);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+.opt__label { font-size: 15.5px; line-height: 1.35; color: var(--ink-2); }
+
+/* the native input stays, and stays operable - it is simply not drawn */
+.opt__mark {
+  position: absolute; opacity: 0; width: 1px; height: 1px;
+  margin: 0; pointer-events: none;
+}
+.opt:has(.opt__mark:checked) {
+  border-color: var(--line-2); border-left-color: var(--accent);
+  background: var(--accent-soft);
+}
+.opt:has(.opt__mark:checked) .opt__key {
+  border-color: var(--accent); background: var(--accent); color: var(--on-accent);
+}
+.opt:has(.opt__mark:checked) .opt__label { color: var(--ink); font-weight: 500; }
+
+/* the 320ms between answering and the next question: a line sweeps the row,
+   so the advance reads as a consequence of the answer rather than a jump */
+.opt--advancing::after {
+  content: ''; position: absolute; inset: 0 auto 0 0; width: 100%;
+  background: var(--accent); opacity: .1;
+  transform: scaleX(0); transform-origin: left center;
+  animation: sweep-row 320ms var(--ease-out) forwards;
+}
+@keyframes sweep-row { to { transform: scaleX(1); } }
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+/* NIGHTSHIFT buttons: 6px radius, Hanken 600, brand blue fill under white */
+.btn {
+  font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 15px; font-weight: 600;
+  letter-spacing: 0; border-radius: 6px; padding: 0 22px; min-height: 46px;
+  border: 1px solid transparent; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 10px;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.btn--primary,
+.btn--accent { background: var(--accent-fill); color: #FFFFFF; }
+.btn--primary:hover,
+.btn--accent:hover { background: var(--accent-fill-hover); transform: translateY(-1px); }
+.btn--quiet { background: transparent; color: var(--ink-2); border-color: var(--line-2); }
+.btn--quiet:hover { color: var(--ink); border-color: var(--ink-3); }
+/* on the chapter photograph the brand blue is the only light source, exactly
+   as it is on the marketing hero */
+.btn--onground { background: var(--accent-fill); color: #FFFFFF; }
+.btn--onground:hover { background: var(--accent-fill-hover); transform: translateY(-1px); }
+.btn--lg { padding: 0 28px; min-height: 56px; font-size: 16px; }
+.btn__arrow { display: inline-block; transition: transform var(--dur-fast) var(--ease); }
+.btn:hover .btn__arrow { transform: translateX(3px); }
+
+.kbd {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: var(--ink-4);
+  letter-spacing: .05em;
+}
+.kbd kbd {
+  font-family: inherit; border: 1px solid var(--line-2); border-radius: 3px;
+  padding: 1px 5px; color: var(--ink-3);
+}
+
+.footbar {
+  margin-top: auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding-top: 20px; border-top: 1px solid var(--line);
+}
+.footbar__actions { display: flex; align-items: center; gap: 10px; flex: none; }
+.land__cta {
+  margin-top: auto; display: flex; align-items: center; gap: 18px;
+  flex-wrap: wrap; padding-top: 22px; border-top: 1px solid var(--line);
+}
+
+/* ==========================================================================
+   Chapter opening — one ground for all six: a datacentre at night under a
+   scrim that runs to solid #05070C, white ink on it
+   ========================================================================== */
+.chapter {
+  position: relative; isolation: isolate;
+  flex: 1; display: flex; flex-direction: column;
+  background: var(--ground) url(/site/img/dark-datacentre.jpg) center / cover no-repeat;
+  color: var(--on-ground);
+  min-height: 0;
+}
+/* the scrim. Lightest at the top, where the photograph is allowed to show,
+   and solid page-black by the foot, so the ink is never asked to sit on a
+   highlight. Everything in the chapter is lifted above it. */
+.chapter::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(5,7,12,.55) 0%, rgba(5,7,12,.82) 55%, #05070C 100%);
+}
+.chapter .btn--quiet { color: var(--on-ground-2); border-color: var(--ground-line); }
+.chapter .btn--quiet:hover { color: var(--on-ground); border-color: var(--on-ground-2); }
+.chapter .rail__seg { background: var(--ground-line-2); }
+.chapter .rail__seg > i { background: var(--ground-line); }
+.chapter .rail__seg.is-now > i { background: var(--on-ground); }
+
+.chapter__top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px clamp(18px, 4vw, 40px);
+  border-bottom: 1px solid var(--ground-line-2);
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px;
+  letter-spacing: .05em; color: var(--on-ground-2); flex: none;
+}
+.chapter__area { flex: 1; display: flex; justify-content: center; min-height: 0; }
+.chapter__measure {
+  width: min(64rem, 100%);
+  border-left: 1px solid var(--ground-line-2);
+  border-right: 1px solid var(--ground-line-2);
+  display: grid; grid-template-columns: 124px minmax(0, 1fr);
+}
+.chapter__gutter {
+  border-right: 1px solid var(--ground-line-2);
+  padding: 36px 16px 22px 24px;
+  display: flex; flex-direction: column;
+}
+.chapter__num {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(2.4rem, 5vw, 3.4rem); line-height: .9; letter-spacing: -.055em;
+  color: var(--on-ground); margin: 0; font-variant-numeric: tabular-nums;
+}
+.chapter__body {
+  padding: 36px clamp(20px, 3vw, 34px) 26px;
+  display: flex; flex-direction: column; gap: 16px; min-width: 0;
+}
+.chapter__kicker {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--on-ground-2); margin: 0;
+}
+.chapter__title {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(1.8rem, 3.8vw, 2.9rem); line-height: 1.02; letter-spacing: -.035em;
+  margin: 0; max-width: 17ch; color: var(--on-ground); text-wrap: balance;
+}
+.chapter__focus {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; letter-spacing: .08em;
+  color: var(--on-ground-2); margin: 0;
+}
+.chapter__text {
+  font-size: 15.5px; line-height: 1.65; color: var(--on-ground-2);
+  max-width: 56ch; margin: 0;
+}
+.chapter__facts {
+  list-style: none; padding: 0; margin: 0; display: flex; gap: 10px; flex-wrap: wrap;
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--on-ground-2);
+}
+.chapter__facts li { border: 1px solid var(--ground-line); border-radius: 3px; padding: 3px 8px; }
+.chapter__foot {
+  margin-top: 10px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding-top: 22px; border-top: 1px solid var(--ground-line-2);
+}
+.chapter .chip-ns { border-color: var(--ground-line); color: var(--on-ground-2); }
+
+/* the switch on the chapter ground, where the surface tokens do not apply */
+.chapter .themetog { background: var(--ground-line-2); border-color: var(--ground-line); }
+.chapter .themetog__knob { background: var(--on-ground-2); }
+.chapter .themetog__knob::after { background: var(--ground); }
+.chapter .themetog[aria-pressed="true"] { background: var(--ground-line); border-color: var(--on-ground); }
+.chapter .themetog[aria-pressed="true"] .themetog__knob { background: var(--on-ground); }
+
+/* ==========================================================================
+   Landing
+   ========================================================================== */
+.land__title {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(2rem, 4.2vw, 3.2rem); line-height: 1; letter-spacing: -.035em;
+  margin: 0; max-width: 19ch; text-wrap: balance; color: var(--ink);
+}
+.land__body { font-size: 16.5px; line-height: 1.62; color: var(--ink-2); max-width: 56ch; margin: 0; }
+.land__meta { list-style: none; padding: 0; margin: 0; display: grid; }
+.land__meta li {
+  font-size: 14.5px; color: var(--ink-3); padding: 9px 0;
+  border-top: 1px solid var(--line);
+}
+.land__meta li:last-child { border-bottom: 1px solid var(--line); }
+
+/* the five bands, shown before a single question is asked */
+.ladder { list-style: none; padding: 0; margin: 0; display: grid; }
+.ladder li {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 8px 0; border-top: 1px solid var(--line);
+  font-size: 13.5px; color: var(--ink-3);
+}
+.ladder li:first-child { border-top: 0; }
+.ladder__range {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; letter-spacing: .04em;
+  color: var(--ink-4); flex: none; width: 52px;
+  font-variant-numeric: tabular-nums;
+}
+.ladder b { font-weight: 500; color: var(--ink-2); }
+.ladder li.is-now { color: var(--ink); }
+.ladder li.is-now b { color: var(--accent); font-weight: 600; }
+.ladder__dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  margin-left: auto; flex: none; align-self: center;
+}
+
+/* ==========================================================================
+   Lead capture
+   ========================================================================== */
+.field { display: grid; gap: 6px; }
+.field__label {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.field__hint { font-size: 12.5px; color: var(--ink-4); margin: 0; }
+.input, .select {
+  font-family: inherit; font-size: 15.5px; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line-2);
+  border-radius: 6px; padding: 11px 13px; width: 100%;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.input:hover, .select:hover { border-color: var(--ink-4); }
+.input:focus, .select:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.input::placeholder { color: var(--ink-4); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.consent {
+  display: flex; gap: 11px; align-items: flex-start;
+  border: 1px solid var(--line); border-left: 2px solid var(--line-2);
+  border-radius: 6px; background: var(--surface-alt); padding: 13px 15px;
+}
+.consent__note { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; margin: 0; max-width: 56ch; }
+
+/* ---- lead form internals ---- */
+.form { display: grid; gap: 16px; }
+.lbl {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 6px;
+}
+.opt-tag {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-4);
+}
+.opt-tag:empty { display: none; }
+
+/* channel picker: two halves of one control, so the choice reads as a switch
+   between equals rather than as a radio group that happens to have two rows */
+.segmented {
+  display: inline-flex; border: 1px solid var(--line-2); border-radius: 6px;
+  overflow: hidden; margin-bottom: 9px;
+}
+.seg { position: relative; }
+.seg input {
+  position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none;
+}
+.seg span {
+  display: block; padding: 8px 16px; cursor: pointer;
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-3);
+  border-right: 1px solid var(--line-2);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.seg:last-child span { border-right: 0; }
+.seg span:hover { background: var(--surface-alt); color: var(--ink); }
+.seg:has(input:checked) span { background: var(--accent); color: var(--on-accent); }
+.seg:has(input:focus-visible) span { outline: 2px solid var(--focus); outline-offset: -2px; }
+
+/* multi-select chips - the same idea as an answer row, at label size */
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip { position: relative; cursor: pointer; }
+.chip input {
+  position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none;
+}
+.chip span {
+  display: block; border: 1px solid var(--line-2); border-radius: 999px;
+  padding: 6px 14px; font-size: 13.5px; color: var(--ink-2);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+.chip span:hover { border-color: var(--ink-4); background: var(--surface-alt); }
+.chip:has(input:checked) span {
+  border-color: var(--accent); background: var(--accent-soft); color: var(--ink); font-weight: 500;
+}
+.chip:has(input:focus-visible) span { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.consent__box {
+  display: flex; gap: 10px; align-items: flex-start; cursor: pointer;
+  font-size: 14px; color: var(--ink-2); line-height: 1.5;
+}
+.consent__box input { margin: 3px 0 0; accent-color: var(--accent); flex: none; }
+
+.privacy { font-size: 13px; color: var(--ink-3); margin: 0; }
+.privacy a { color: var(--accent); }
+
+/* ==========================================================================
+   RESULT — the roadmap, carried over from direction A
+   ========================================================================== */
+.res__score { display: grid; gap: 4px; }
+/* the numeral is Funnel Display at its lightest weight - the same voice the
+   marketing site uses for a pull-quote, so the score reads as a statement
+   rather than a dashboard figure */
+.score__num {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif;
+  font-weight: 300; font-size: clamp(3.4rem, 8vw, 5.4rem); line-height: .85;
+  letter-spacing: -.04em; color: var(--ink); margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.score__den {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .2em;
+  color: var(--ink-4); letter-spacing: .06em; margin-left: 10px;
+}
+.score__band {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700; font-size: 1.22rem;
+  letter-spacing: -.035em; color: var(--ink); margin: 10px 0 5px;
+}
+.score__interp { font-size: 14.5px; line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 48ch; }
+
+/* ---- the scale: a ticked track, a fill, a needle carrying its flag ---- */
+.scale { margin: 30px 0 0; }
+.scale__track {
+  position: relative; height: 44px;
+  border: 1px solid var(--line-2); background: var(--surface-alt);
+  border-radius: 3px 3px 0 0;
+}
+.scale__ticks {
+  position: absolute; inset: 0; overflow: hidden; border-radius: 2px 2px 0 0;
+  background-image:
+    linear-gradient(to right, var(--line-2) 1px, transparent 1px),
+    linear-gradient(to right, var(--ink-4) 1px, transparent 1px);
+  background-size: 2% 9px, 10% 17px;
+  background-position: 0 0, 0 0;
+  background-repeat: repeat-x;
+  opacity: .8;
+}
+.scale__fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+  background: var(--accent-soft); border-right: 1px solid var(--accent);
+  transition: width 900ms var(--ease-out);
+}
+.scale__needle {
+  position: absolute; top: -9px; bottom: -9px; width: 2px;
+  background: var(--accent);
+  animation: needle-settle 900ms var(--ease-out) both;
+}
+.scale__needle::before {
+  content: ''; position: absolute; top: -1px; left: -4px;
+  width: 10px; height: 5px; background: var(--accent);
+}
+.scale__flag {
+  position: absolute; top: -38px; left: -1px;
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums;
+  font-size: 12px; letter-spacing: .06em;
+  color: var(--on-accent); background: var(--accent);
+  padding: 3px 8px; white-space: nowrap; border-radius: 2px;
+}
+/* near the right end the flag hangs off the track and, on a phone, off the
+   page; from 89 up it sits to the left of the needle instead */
+.scale__needle:is(.m89, .m90, .m91, .m92, .m93, .m94, .m95, .m96, .m97, .m98, .m99, .m100) .scale__flag {
+  left: auto; right: -1px;
+}
+@keyframes needle-settle {
+  0%   { transform: translateX(-34vw); opacity: 0; }
+  12%  { opacity: 1; }
+  92%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* ---- the five bands: only the one you landed in lights ---- */
+.scale__bands {
+  display: flex; list-style: none; margin: 0; padding: 0;
+  border: 1px solid var(--line-2); border-top: 0; border-radius: 0 0 3px 3px;
+  overflow: hidden;
+}
+.scale__bands li {
+  padding: 9px 10px; border-right: 1px solid var(--line);
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9.5px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ink-4); min-width: 0;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.scale__bands li:last-child { border-right: 0; }
+.scale__bands li span {
+  display: block; font-size: 11px; letter-spacing: .02em;
+  color: var(--ink-4); margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.scale__bands li.on {
+  background: var(--accent-soft); color: var(--accent);
+  box-shadow: inset 0 2px 0 var(--accent);
+}
+.scale__bands li.on span { color: var(--accent); }
+
+/* the colour ramp under the strip, so the scale reads as a climb */
+.scale__bands li:nth-child(1)::after,
+.scale__bands li:nth-child(2)::after,
+.scale__bands li:nth-child(3)::after,
+.scale__bands li:nth-child(4)::after,
+.scale__bands li:nth-child(5)::after {
+  content: ''; display: block; height: 3px; margin-top: 8px; border-radius: 2px;
+}
+.scale__bands li:nth-child(1)::after { background: var(--band-1); }
+.scale__bands li:nth-child(2)::after { background: var(--band-2); }
+.scale__bands li:nth-child(3)::after { background: var(--band-3); }
+.scale__bands li:nth-child(4)::after { background: var(--band-4); }
+.scale__bands li:nth-child(5)::after { background: var(--band-5); }
+
+/* ---- findings ---- */
+.res__main { display: flex; flex-direction: column; gap: 20px; }
+.res__intro { font-size: 16px; line-height: 1.62; color: var(--ink-2); margin: 0; max-width: 60ch; }
+.block { border-top: 1px solid var(--line); padding-top: 18px; }
+.block__label {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink-4); margin: 0 0 8px;
+}
+.block__title {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700; font-size: 1.4rem;
+  line-height: 1.12; letter-spacing: -.035em; margin: 0 0 8px; color: var(--ink);
+}
+.block__text { font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 0; max-width: 60ch; }
+.pills { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.pills li {
+  border: 1px solid var(--line-2); border-radius: 999px; padding: 5px 13px;
+  font-size: 13px; color: var(--ink-2);
+}
+
+/* ---- the seven treatments: the same grammar as the band strip ----
+   All of them stay visible and one lights, because the six you did not get
+   are what makes the one you did mean something. When the answer is
+   "discovery first" none lights, which is the honest picture: no treatment
+   can be chosen yet. */
+.seven {
+  list-style: none; margin: 0 0 16px; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+  /* Each cell closes its own right and bottom edge and the strip closes the
+     other two, so a row that wraps on a narrow screen is still boxed and a
+     ragged last row leaves no dangling hairline. */
+  border-top: 1px solid var(--line-2); border-left: 1px solid var(--line-2);
+}
+.seven li {
+  padding: 9px 10px; min-width: 0; color: var(--ink-4);
+  border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.seven li b {
+  display: block; font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 600;
+  font-size: 13px; letter-spacing: -.01em; color: var(--ink-3); margin-bottom: 2px;
+}
+.seven li span {
+  display: block; font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; line-height: 1.35;
+}
+.seven li.on {
+  background: var(--accent-soft); box-shadow: inset 0 2px 0 var(--accent);
+}
+.seven li.on b, .seven li.on span { color: var(--accent); }
+
+/* A band the engine held back. Stated on the score, not buried in the copy -
+   an "Early-stage" label above a 78 has to explain itself immediately. */
+.score__cap {
+  margin: 12px 0 0; max-width: 48ch;
+  font-size: 13px; line-height: 1.55; color: var(--ink-3);
+  border-left: 2px solid var(--warn); padding-left: 11px;
+}
+.score__cap b { color: var(--ink-2); font-weight: 600; }
+
+.panel {
+  border: 1px solid var(--line); border-left: 2px solid var(--accent);
+  border-radius: 6px; background: var(--surface-alt); padding: 15px 17px;
+}
+.panel--ok { border-left-color: var(--accent); }
+.panel--warn { border-left-color: var(--warn); }
+.panel h4 {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700; font-size: 15.5px;
+  letter-spacing: -.035em; margin: 0 0 5px; color: var(--ink);
+}
+.panel p { font-size: 14px; color: var(--ink-2); margin: 0; line-height: 1.55; }
+.panel .hint { font-size: 12.5px; color: var(--ink-4); margin-top: 6px; }
+
+.cta {
+  margin-top: auto;
+  display: inline-flex; align-items: center; gap: 12px; align-self: flex-start;
+  font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 16px; font-weight: 600;
+  letter-spacing: 0; text-decoration: none;
+  background: var(--accent-fill); color: #FFFFFF;
+  border-radius: 6px; padding: 0 28px; min-height: 56px;
+  transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.cta:hover { background: var(--accent-fill-hover); transform: translateY(-1px); }
+.cta__support { font-size: 13.5px; color: var(--ink-3); margin: 0; max-width: 52ch; }
+.disclaimer { font-size: 12.5px; color: var(--ink-4); margin: 0; line-height: 1.55; max-width: 60ch; }
+
+/* ==========================================================================
+   THE HUB
+   The root page. Same centre line, same restraint: the cards are the content,
+   so they get the only weight on the page and everything else gets out of the
+   way. Built to take four services without redesign - the grid reflows and
+   the cards do not change size.
+   ========================================================================== */
+.hub { background: var(--surface); }
+
+.hub__chrome {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px clamp(20px, 5vw, 48px);
+  border-bottom: 1px solid var(--line);
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px;
+  letter-spacing: .05em; color: var(--ink-3);
+}
+.hub__foot { margin-left: auto; color: var(--ink-4); }
+
+.hub__body {
+  width: min(72rem, 100%);
+  margin: 0 auto;
+  padding: clamp(40px, 7vw, 80px) clamp(20px, 5vw, 48px) 80px;
+  display: flex; flex-direction: column; gap: clamp(36px, 5vw, 56px);
+}
+
+.hub__head { display: flex; flex-direction: column; gap: 18px; }
+.hub__title {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.04; letter-spacing: -.045em;
+  margin: 0; max-width: 16ch; color: var(--ink); text-wrap: balance;
+}
+.hub__lede {
+  font-size: clamp(1rem, 1.5vw, 1.15rem); line-height: 1.6;
+  color: var(--ink-2); max-width: 62ch; margin: 0;
+}
+.hub__meta { list-style: none; padding: 0; margin: 0; display: grid; max-width: 62ch; }
+.hub__meta li {
+  font-size: 14px; color: var(--ink-3); padding: 9px 0;
+  border-top: 1px solid var(--line);
+}
+.hub__meta li:last-child { border-bottom: 1px solid var(--line); }
+
+/* the cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 26px 26px 22px;
+  border: 1px solid var(--line-2); border-radius: 10px;
+  background: var(--surface); color: inherit; text-decoration: none;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease),
+              transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.card:hover {
+  border-color: var(--accent); background: var(--surface-alt);
+  transform: translateY(-2px); box-shadow: var(--shadow-lift);
+}
+.card:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+.card__eyebrow {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--accent); margin: 0;
+}
+.card__title {
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 700; font-size: 1.4rem;
+  line-height: 1.15; letter-spacing: -.035em; margin: 0; color: var(--ink);
+}
+.card__tagline {
+  font-size: 15.5px; line-height: 1.45; color: var(--ink); margin: 0;
+  font-weight: 500; text-wrap: balance;
+}
+.card__summary { font-size: 14.5px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+
+.card__facts {
+  display: flex; flex-wrap: wrap; gap: 0; margin: 6px 0 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+.card__facts > div { padding: 10px 20px 10px 0; }
+.card__facts dt {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9.5px; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--ink-4); margin: 0 0 3px;
+}
+.card__facts dd {
+  margin: 0; font-size: 14px; color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.card__for { font-size: 13.5px; color: var(--ink-3); margin: 0; font-style: italic; }
+
+.card__go {
+  margin-top: auto; padding-top: 16px;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Funnel Display', 'Hanken Grotesk', sans-serif; font-weight: 500; font-size: 14.5px;
+  letter-spacing: -.01em; color: var(--accent);
+}
+.card__go i { font-style: normal; transition: transform var(--dur-fast) var(--ease); }
+.card:hover .card__go i { transform: translateX(4px); }
+
+/* a service that is listed but not built yet reads as inert, not broken */
+.card--soon { opacity: .62; border-style: dashed; }
+.card--soon .card__go { color: var(--ink-4); }
+
+.hub__note {
+  font-size: 13.5px; line-height: 1.6; color: var(--ink-3);
+  margin: 0; max-width: 68ch; padding-top: 8px; border-top: 1px solid var(--line);
+}
+.hub__note a { color: var(--accent); }
+
+/* the cards arrive in order, once */
+.cards .card { animation: rise 480ms var(--ease-out) both; }
+.cards .card:nth-child(1) { animation-delay: 60ms; }
+.cards .card:nth-child(2) { animation-delay: 130ms; }
+.cards .card:nth-child(3) { animation-delay: 200ms; }
+.cards .card:nth-child(n+4) { animation-delay: 260ms; }
+.hub__head > * { animation: rise 460ms var(--ease-out) both; }
+.hub__head > *:nth-child(1) { animation-delay: 0ms; }
+.hub__head > *:nth-child(2) { animation-delay: 50ms; }
+.hub__head > *:nth-child(3) { animation-delay: 100ms; }
+.hub__head > *:nth-child(4) { animation-delay: 150ms; }
+
+@media (max-width: 760px) {
+  .cards { grid-template-columns: 1fr; }
+  .card { padding: 22px 20px 18px; }
+}
+
+/* ==========================================================================
+   MOTION
+   One idea, applied consistently: content arrives from just below, in the
+   order a person reads it. Nothing loops, nothing bounces, nothing moves
+   after it has settled - so the screen is calm by the time it is being used.
+   ========================================================================== */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(9px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+.body > *,
+.chapter__body > *,
+.chapter__gutter > * {
+  animation: rise 420ms var(--ease-out) both;
+}
+.body > *:nth-child(1), .chapter__body > *:nth-child(1) { animation-delay: 20ms; }
+.body > *:nth-child(2), .chapter__body > *:nth-child(2) { animation-delay: 70ms; }
+.body > *:nth-child(3), .chapter__body > *:nth-child(3) { animation-delay: 120ms; }
+.body > *:nth-child(4), .chapter__body > *:nth-child(4) { animation-delay: 170ms; }
+.body > *:nth-child(5), .chapter__body > *:nth-child(5) { animation-delay: 210ms; }
+.body > *:nth-child(n+6), .chapter__body > *:nth-child(n+6) { animation-delay: 250ms; }
+
+/* answers stagger inside their own fieldset, so a long list still lands as
+   one gesture rather than six separate ones */
+.opts .opt { animation: rise 380ms var(--ease-out) both; }
+.opts .opt:nth-child(1) { animation-delay: 130ms; }
+.opts .opt:nth-child(2) { animation-delay: 168ms; }
+.opts .opt:nth-child(3) { animation-delay: 206ms; }
+.opts .opt:nth-child(4) { animation-delay: 244ms; }
+.opts .opt:nth-child(5) { animation-delay: 282ms; }
+.opts .opt:nth-child(6) { animation-delay: 320ms; }
+.opts .opt:nth-child(n+7) { animation-delay: 352ms; }
+
+/* the gutter draws itself in after the content, never before it */
+.gutter { animation: fade 500ms var(--ease) 120ms both; }
+.measure { animation: fade 320ms var(--ease) both; }
+.chapter { animation: fade 380ms var(--ease) both; }
+
+/* the result is the one screen allowed a flourish, and it is a single one:
+   the needle sweeps 0 to your score, the fill follows, the band lights */
+.scale__bands li.on { animation: fade 500ms var(--ease) 700ms both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* ==========================================================================
+   Narrow screens
+   The hairlines retire - a phone has no margin to bound - and the gutter
+   lies down into a strip above the content.
+   ========================================================================== */
+@media (max-width: 760px) {
+  body { --q: clamp(1.5rem, 6.4vw, 2rem); }
+
+  .measure, .chapter__measure {
+    grid-template-columns: 1fr;
+    border-left: 0; border-right: 0; width: 100%;
+  }
+  .gutter, .chapter__gutter {
+    border-right: 0; border-bottom: 1px solid var(--line);
+    flex-direction: row; align-items: center; flex-wrap: wrap;
+    gap: 8px 18px; padding: 12px clamp(18px, 5vw, 24px);
+  }
+  .chapter__gutter { border-bottom-color: var(--ground-line-2); }
+  .gutter__spacer { display: none; }
+  .gutter__n, .chapter__num { font-size: 1.7rem; }
+  .ticks { grid-auto-flow: column; gap: 5px; margin-bottom: 0; }
+
+  .body, .chapter__body { padding: 24px clamp(18px, 5vw, 24px) 18px; }
+  .opts--two, .grid2 { grid-template-columns: 1fr; }
+
+  .footbar, .land__cta, .chapter__foot {
+    flex-direction: column-reverse; align-items: stretch; gap: 10px;
+  }
+  .footbar .kbd { display: none; }
+  .footbar__actions { flex-direction: column-reverse; align-items: stretch; }
+  .btn { justify-content: center; width: 100%; }
+  .cta { align-self: stretch; justify-content: center; }
+
+  .chrome { font-size: 10.5px; gap: 10px; }
+  .chrome__name { display: none; }
+
+  /* five illegible columns become five legible rows */
+  .scale__bands { flex-direction: column; }
+  .scale__bands li {
+    border-right: 0; border-bottom: 1px solid var(--line);
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .scale__bands li:last-child { border-bottom: 0; }
+  .scale__bands li span { margin-bottom: 0; }
+  .scale__bands li::after { width: 100%; }
+}
+
+/* The honeypot on the contact step: off-canvas rather than display:none, so a
+   bot that skips hidden inputs still fills it. The endpoint treats a non-empty
+   value as a bot. */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ==========================================================================
+   Generated below this line. Do not hand-edit.
+   The rail fill, the segment widths, the band spans and the needle position
+   are continuous values that CSP will not let us write inline, so each one
+   ships as a class. See scripts/build.js.
+   ========================================================================== */
+
+
+/* rail segment widths, one per distinct chapter length in any bank */
+.w2 { flex: 2; }
+.w3 { flex: 3; }
+.w4 { flex: 4; }
+.w5 { flex: 5; }
+
+/* rail fill, every step reachable in any chapter */
+.f-0 > i { width: 0%; }
+.f-1 > i { width: 1%; }
+.f-2 > i { width: 2%; }
+.f-3 > i { width: 3%; }
+.f-4 > i { width: 4%; }
+.f-5 > i { width: 5%; }
+.f-6 > i { width: 6%; }
+.f-7 > i { width: 7%; }
+.f-8 > i { width: 8%; }
+.f-9 > i { width: 9%; }
+.f-10 > i { width: 10%; }
+.f-11 > i { width: 11%; }
+.f-12 > i { width: 12%; }
+.f-13 > i { width: 13%; }
+.f-14 > i { width: 14%; }
+.f-15 > i { width: 15%; }
+.f-16 > i { width: 16%; }
+.f-17 > i { width: 17%; }
+.f-18 > i { width: 18%; }
+.f-19 > i { width: 19%; }
+.f-20 > i { width: 20%; }
+.f-21 > i { width: 21%; }
+.f-22 > i { width: 22%; }
+.f-23 > i { width: 23%; }
+.f-24 > i { width: 24%; }
+.f-25 > i { width: 25%; }
+.f-26 > i { width: 26%; }
+.f-27 > i { width: 27%; }
+.f-28 > i { width: 28%; }
+.f-29 > i { width: 29%; }
+.f-30 > i { width: 30%; }
+.f-31 > i { width: 31%; }
+.f-32 > i { width: 32%; }
+.f-33 > i { width: 33%; }
+.f-34 > i { width: 34%; }
+.f-35 > i { width: 35%; }
+.f-36 > i { width: 36%; }
+.f-37 > i { width: 37%; }
+.f-38 > i { width: 38%; }
+.f-39 > i { width: 39%; }
+.f-40 > i { width: 40%; }
+.f-41 > i { width: 41%; }
+.f-42 > i { width: 42%; }
+.f-43 > i { width: 43%; }
+.f-44 > i { width: 44%; }
+.f-45 > i { width: 45%; }
+.f-46 > i { width: 46%; }
+.f-47 > i { width: 47%; }
+.f-48 > i { width: 48%; }
+.f-49 > i { width: 49%; }
+.f-50 > i { width: 50%; }
+.f-51 > i { width: 51%; }
+.f-52 > i { width: 52%; }
+.f-53 > i { width: 53%; }
+.f-54 > i { width: 54%; }
+.f-55 > i { width: 55%; }
+.f-56 > i { width: 56%; }
+.f-57 > i { width: 57%; }
+.f-58 > i { width: 58%; }
+.f-59 > i { width: 59%; }
+.f-60 > i { width: 60%; }
+.f-61 > i { width: 61%; }
+.f-62 > i { width: 62%; }
+.f-63 > i { width: 63%; }
+.f-64 > i { width: 64%; }
+.f-65 > i { width: 65%; }
+.f-66 > i { width: 66%; }
+.f-67 > i { width: 67%; }
+.f-68 > i { width: 68%; }
+.f-69 > i { width: 69%; }
+.f-70 > i { width: 70%; }
+.f-71 > i { width: 71%; }
+.f-72 > i { width: 72%; }
+.f-73 > i { width: 73%; }
+.f-74 > i { width: 74%; }
+.f-75 > i { width: 75%; }
+.f-76 > i { width: 76%; }
+.f-77 > i { width: 77%; }
+.f-78 > i { width: 78%; }
+.f-79 > i { width: 79%; }
+.f-80 > i { width: 80%; }
+.f-81 > i { width: 81%; }
+.f-82 > i { width: 82%; }
+.f-83 > i { width: 83%; }
+.f-84 > i { width: 84%; }
+.f-85 > i { width: 85%; }
+.f-86 > i { width: 86%; }
+.f-87 > i { width: 87%; }
+.f-88 > i { width: 88%; }
+.f-89 > i { width: 89%; }
+.f-90 > i { width: 90%; }
+.f-91 > i { width: 91%; }
+.f-92 > i { width: 92%; }
+.f-93 > i { width: 93%; }
+.f-94 > i { width: 94%; }
+.f-95 > i { width: 95%; }
+.f-96 > i { width: 96%; }
+.f-97 > i { width: 97%; }
+.f-98 > i { width: 98%; }
+.f-99 > i { width: 99%; }
+.f-100 > i { width: 100%; }
+
+/* band widths, proportional to the score range each covers */
+.b11 { flex: 11; }
+.b15 { flex: 15; }
+.b25 { flex: 25; }
+
+/* needle position, one per attainable score */
+.m0 { left: 0%; }
+.m1 { left: 1%; }
+.m2 { left: 2%; }
+.m3 { left: 3%; }
+.m4 { left: 4%; }
+.m5 { left: 5%; }
+.m6 { left: 6%; }
+.m7 { left: 7%; }
+.m8 { left: 8%; }
+.m9 { left: 9%; }
+.m10 { left: 10%; }
+.m11 { left: 11%; }
+.m12 { left: 12%; }
+.m13 { left: 13%; }
+.m14 { left: 14%; }
+.m15 { left: 15%; }
+.m16 { left: 16%; }
+.m17 { left: 17%; }
+.m18 { left: 18%; }
+.m19 { left: 19%; }
+.m20 { left: 20%; }
+.m21 { left: 21%; }
+.m22 { left: 22%; }
+.m23 { left: 23%; }
+.m24 { left: 24%; }
+.m25 { left: 25%; }
+.m26 { left: 26%; }
+.m27 { left: 27%; }
+.m28 { left: 28%; }
+.m29 { left: 29%; }
+.m30 { left: 30%; }
+.m31 { left: 31%; }
+.m32 { left: 32%; }
+.m33 { left: 33%; }
+.m34 { left: 34%; }
+.m35 { left: 35%; }
+.m36 { left: 36%; }
+.m37 { left: 37%; }
+.m38 { left: 38%; }
+.m39 { left: 39%; }
+.m40 { left: 40%; }
+.m41 { left: 41%; }
+.m42 { left: 42%; }
+.m43 { left: 43%; }
+.m44 { left: 44%; }
+.m45 { left: 45%; }
+.m46 { left: 46%; }
+.m47 { left: 47%; }
+.m48 { left: 48%; }
+.m49 { left: 49%; }
+.m50 { left: 50%; }
+.m51 { left: 51%; }
+.m52 { left: 52%; }
+.m53 { left: 53%; }
+.m54 { left: 54%; }
+.m55 { left: 55%; }
+.m56 { left: 56%; }
+.m57 { left: 57%; }
+.m58 { left: 58%; }
+.m59 { left: 59%; }
+.m60 { left: 60%; }
+.m61 { left: 61%; }
+.m62 { left: 62%; }
+.m63 { left: 63%; }
+.m64 { left: 64%; }
+.m65 { left: 65%; }
+.m66 { left: 66%; }
+.m67 { left: 67%; }
+.m68 { left: 68%; }
+.m69 { left: 69%; }
+.m70 { left: 70%; }
+.m71 { left: 71%; }
+.m72 { left: 72%; }
+.m73 { left: 73%; }
+.m74 { left: 74%; }
+.m75 { left: 75%; }
+.m76 { left: 76%; }
+.m77 { left: 77%; }
+.m78 { left: 78%; }
+.m79 { left: 79%; }
+.m80 { left: 80%; }
+.m81 { left: 81%; }
+.m82 { left: 82%; }
+.m83 { left: 83%; }
+.m84 { left: 84%; }
+.m85 { left: 85%; }
+.m86 { left: 86%; }
+.m87 { left: 87%; }
+.m88 { left: 88%; }
+.m89 { left: 89%; }
+.m90 { left: 90%; }
+.m91 { left: 91%; }
+.m92 { left: 92%; }
+.m93 { left: 93%; }
+.m94 { left: 94%; }
+.m95 { left: 95%; }
+.m96 { left: 96%; }
+.m97 { left: 97%; }
+.m98 { left: 98%; }
+.m99 { left: 99%; }
+.m100 { left: 100%; }

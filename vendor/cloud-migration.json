@@ -1,0 +1,1996 @@
+{
+  "$comment": "Cloud Migration Assessment, built from cloud-migration/cloud-migration-assessment-prd.md and its question bank. Two corrections to the source, both deliberate. (1) ARITHMETIC: the PRD says 24 scored questions and a raw maximum of 120, which assumes every question can earn 5. Q03 - the migration driver - awards 3 points to every real driver and 0 to \"not sure yet\", because no driver is more ready than another. Its best answer is worth 3, so the real maximum is 118. A test asserts raw_max equals the sum of the best answer to every scored question, so the two can never drift. (2) NUMBERING: the question bank's Q01-Q24 are this file's Q03-Q26. Two unscored context questions were added at the head - where the systems run today, and how many there are - because the PRD asks for current_environment and workload scale in the lead payload, the notifications and the analytics, and the question bank never asks for either. To read a question against the source markdown, subtract two.",
+  "ruleset_version": "migration-1.0.0",
+  "scoring": {
+    "points_per_question": 5,
+    "raw_max": 118,
+    "secondary_threshold": 0.34,
+    "min_evidence_threshold": 0.6,
+    "min_evidence_question_count": 2,
+    "deficit_precision": 4,
+    "bands": [
+      {
+        "min": 0,
+        "max": 24,
+        "label": "Not ready",
+        "interpretation": "Migration goals, inventory, ownership, or risk controls are not defined well enough to plan against."
+      },
+      {
+        "min": 25,
+        "max": 49,
+        "label": "Early-stage",
+        "interpretation": "The intention is there. What is missing is discovery and mobilisation."
+      },
+      {
+        "min": 50,
+        "max": 74,
+        "label": "Developing",
+        "interpretation": "Key foundations exist, but workload, data, security, or operational gaps remain."
+      },
+      {
+        "min": 75,
+        "max": 89,
+        "label": "Ready with preparation",
+        "interpretation": "You can begin pilot planning once the targeted gaps below are closed."
+      },
+      {
+        "min": 90,
+        "max": 100,
+        "label": "Migration-ready",
+        "interpretation": "Strong readiness for a controlled pilot or first wave, subject to technical validation."
+      }
+    ],
+    "band_caps": [
+      {
+        "id": "capped_no_inventory",
+        "band": "Early-stage",
+        "when": {
+          "question": "Q06",
+          "equals_any": ["no", "unknown"]
+        },
+        "note": "Your score is capped at Early-stage because you do not yet have an inventory of your applications, servers, databases, and owners. Everything downstream of that - waves, treatments, cost, cutover - is an estimate until it exists.",
+        "rationale": "PRD section 8: no known application or data inventory caps the result at Early-stage. Answering the remaining questions well cannot make an organisation migration-ready when nobody can list what is being migrated."
+      }
+    ]
+  },
+  "categories": [
+    {
+      "id": "discovery_and_inventory",
+      "rank": 1,
+      "label": "Discovery and inventory",
+      "questions": ["Q06", "Q10"],
+      "max_points": 10
+    },
+    {
+      "id": "dependency_and_data",
+      "rank": 2,
+      "label": "Dependencies and data movement",
+      "questions": ["Q13", "Q14", "Q15"],
+      "max_points": 15
+    },
+    {
+      "id": "security_and_compliance",
+      "rank": 3,
+      "label": "Security and compliance",
+      "questions": ["Q16", "Q17"],
+      "max_points": 10
+    },
+    {
+      "id": "landing_zone_and_governance",
+      "rank": 4,
+      "label": "Landing zone and governance",
+      "questions": ["Q11", "Q12", "Q18"],
+      "max_points": 15
+    },
+    {
+      "id": "application_modernisation",
+      "rank": 5,
+      "label": "Application portfolio and treatment",
+      "questions": ["Q07", "Q08", "Q09"],
+      "max_points": 15
+    },
+    {
+      "id": "recovery_and_operations",
+      "rank": 6,
+      "label": "Recovery and operational readiness",
+      "questions": ["Q19", "Q20", "Q21"],
+      "max_points": 15
+    },
+    {
+      "id": "people_and_change",
+      "rank": 7,
+      "label": "People, ownership, and change",
+      "questions": ["Q05", "Q22", "Q23", "Q24"],
+      "max_points": 20
+    },
+    {
+      "id": "business_case",
+      "rank": 8,
+      "label": "Business case and planning",
+      "questions": ["Q03", "Q04", "Q25", "Q26"],
+      "max_points": 18
+    }
+  ],
+  "prerequisite_gates": [
+    {
+      "category": "landing_zone_and_governance",
+      "reason": "discovery_prerequisite",
+      "rationale": "A landing zone designed before the inventory exists is rebuilt after it.",
+      "blocked_when_any": [
+        {
+          "category_deficit_at_least": {
+            "category": "discovery_and_inventory",
+            "value": 0.6
+          }
+        }
+      ]
+    },
+    {
+      "category": "application_modernisation",
+      "reason": "discovery_prerequisite",
+      "rationale": "A treatment cannot be chosen per workload before anyone can list the workloads.",
+      "blocked_when_any": [
+        {
+          "category_deficit_at_least": {
+            "category": "discovery_and_inventory",
+            "value": 0.6
+          }
+        }
+      ]
+    }
+  ],
+  "mandatory_findings": [
+    {
+      "category": "security_and_compliance",
+      "reason": "unclassified_data",
+      "rationale": "PRD section 8: critical data with no identified owner or protection requirement is a mandatory priority, whatever the rest of the score says.",
+      "when": {
+        "any": [
+          {
+            "question": "Q14",
+            "equals_any": ["no", "unknown"]
+          },
+          {
+            "question": "Q17",
+            "equals_any": ["no", "unknown"]
+          }
+        ]
+      }
+    },
+    {
+      "category": "recovery_and_operations",
+      "reason": "untested_recovery",
+      "rationale": "PRD section 8: no tested backup or recovery path for critical workloads is a mandatory priority. A backup nobody has restored is a belief, not a control.",
+      "when": {
+        "any": [
+          {
+            "question": "Q19",
+            "equals_any": ["untested", "inconsistent", "unknown"]
+          },
+          {
+            "question": "Q21",
+            "equals_any": ["decide_during", "no", "unknown"]
+          }
+        ]
+      }
+    },
+    {
+      "category": "people_and_change",
+      "reason": "no_migration_owner",
+      "rationale": "PRD section 8: no internal or external migration owner is a mandatory priority. Every other gap needs someone accountable for closing it.",
+      "when": {
+        "question": "Q22",
+        "equals_any": ["no", "unknown"]
+      }
+    }
+  ],
+  "signal_boosts": [
+    {
+      "question": "Q06",
+      "option": "unknown",
+      "category": "discovery_and_inventory",
+      "boost": 0.15
+    },
+    {
+      "question": "Q13",
+      "option": "unknown",
+      "category": "dependency_and_data",
+      "boost": 0.15
+    },
+    {
+      "question": "Q17",
+      "option": "unknown",
+      "category": "security_and_compliance",
+      "boost": 0.15
+    },
+    {
+      "question": "Q11",
+      "option": "comparing",
+      "category": "landing_zone_and_governance",
+      "boost": 0.1
+    },
+    {
+      "question": "Q25",
+      "option": "assumed_cheaper",
+      "category": "business_case",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "business_case",
+      "category": "business_case",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "discovery",
+      "category": "discovery_and_inventory",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "landing_zone",
+      "category": "landing_zone_and_governance",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "modernise",
+      "category": "application_modernisation",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "dr_cutover",
+      "category": "recovery_and_operations",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "cloud_to_cloud",
+      "category": "dependency_and_data",
+      "boost": 0.1
+    }
+  ],
+  "managed_overlay": {
+    "id": "managed_migration",
+    "any": [
+      {
+        "score_below": 50
+      },
+      {
+        "question": "Q23",
+        "equals_any": ["limited", "none"]
+      },
+      {
+        "question": "Q22",
+        "equals_any": ["no", "unknown"]
+      },
+      {
+        "question": "L04",
+        "includes_any": ["migrate_workloads", "discovery", "landing_zone"]
+      },
+      {
+        "all": [
+          {
+            "question": "L03",
+            "equals_any": ["founder", "cto"]
+          },
+          {
+            "score_below": 75
+          }
+        ]
+      }
+    ]
+  },
+  "confidence_flags": [
+    {
+      "id": "date_set_without_inventory",
+      "all": [
+        {
+          "question": "Q26",
+          "equals_any": ["waves", "date_only", "urgency"]
+        },
+        {
+          "question": "Q06",
+          "equals_any": ["no", "unknown"]
+        }
+      ]
+    },
+    {
+      "id": "regulated_without_classification",
+      "all": [
+        {
+          "question": "Q17",
+          "equals_any": ["documented", "some"]
+        },
+        {
+          "question": "Q14",
+          "equals_any": ["no", "unknown"]
+        }
+      ]
+    },
+    {
+      "id": "target_defined_without_dependencies",
+      "all": [
+        {
+          "question": "Q11",
+          "equals": "defined"
+        },
+        {
+          "question": "Q13",
+          "equals_any": ["no", "unknown"]
+        }
+      ]
+    },
+    {
+      "id": "cutover_undecided_with_untested_backups",
+      "all": [
+        {
+          "question": "Q21",
+          "equals_any": ["decide_during", "no"]
+        },
+        {
+          "question": "Q19",
+          "equals_any": ["untested", "inconsistent"]
+        }
+      ]
+    },
+    {
+      "id": "cost_driver_without_cost_model",
+      "all": [
+        {
+          "question": "Q03",
+          "equals": "cost"
+        },
+        {
+          "question": "Q25",
+          "equals_any": ["assumed_cheaper", "no", "unknown"]
+        }
+      ]
+    },
+    {
+      "id": "many_unknown_answers",
+      "unknown_answers_at_least": 6
+    }
+  ],
+  "strategy_directions": {
+    "$comment": "Section 9. The assessment recommends a direction for the PORTFOLIO, never a treatment per application - individual workloads need separate decisions, which is what the strategy session is for. Options are listed in AWS's canonical order because the result page shows all seven with the recommended one marked; selection is by lowest priority among the rules that match. Retire and repurchase carry no rule on purpose: nothing in this questionnaire evidences an obsolete system or a SaaS replacement, and inventing a trigger for them would be a guess wearing a recommendation's clothes. They stay visible as treatments to consider.",
+    "default": "rehost",
+    "hold": {
+      "id": "discovery_first",
+      "when": {
+        "any": [
+          {
+            "question": "Q06",
+            "equals_any": ["no", "unknown"]
+          },
+          {
+            "question": "Q08",
+            "equals": "unknown"
+          }
+        ]
+      }
+    },
+    "options": [
+      {
+        "id": "retire",
+        "label": "Retire"
+      },
+      {
+        "id": "retain",
+        "label": "Retain",
+        "priority": 30,
+        "when": {
+          "all": [
+            {
+              "question": "Q08",
+              "equals": "legacy"
+            },
+            {
+              "question": "Q13",
+              "equals_any": ["in_people", "no", "unknown"]
+            }
+          ]
+        }
+      },
+      {
+        "id": "rehost",
+        "label": "Rehost",
+        "priority": 60,
+        "when": {
+          "all": [
+            {
+              "question": "Q03",
+              "equals_any": ["cost", "exit_hosting"]
+            },
+            {
+              "question": "Q08",
+              "equals_any": ["modern", "mixed"]
+            }
+          ]
+        }
+      },
+      {
+        "id": "relocate",
+        "label": "Relocate",
+        "priority": 40,
+        "when": {
+          "all": [
+            {
+              "question": "Q01",
+              "includes_any": ["datacentre", "on_prem"]
+            },
+            {
+              "question": "Q03",
+              "equals": "exit_hosting"
+            }
+          ]
+        }
+      },
+      {
+        "id": "replatform",
+        "label": "Replatform",
+        "priority": 50,
+        "when": {
+          "all": [
+            {
+              "question": "Q03",
+              "equals_any": ["reliability", "scale"]
+            },
+            {
+              "question": "Q08",
+              "equals_any": ["modern", "mixed"]
+            }
+          ]
+        }
+      },
+      {
+        "id": "repurchase",
+        "label": "Repurchase"
+      },
+      {
+        "id": "refactor",
+        "label": "Refactor",
+        "priority": 45,
+        "when": {
+          "all": [
+            {
+              "question": "Q03",
+              "equals_any": ["modernise", "analytics"]
+            },
+            {
+              "question": "Q23",
+              "equals_any": ["full", "gaps"]
+            },
+            {
+              "score_at_least": 60
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "sections": [
+    {
+      "n": 1,
+      "title": "Where you are, and why you are moving",
+      "kicker": "Context first",
+      "focus": "The estate today, and the reason to leave it",
+      "body": "The first two questions are not scored. They decide how everything after them should be read - moving five applications off shared hosting and consolidating a data centre are the same project only on paper.",
+      "question_count": 5,
+      "points": 13
+    },
+    {
+      "n": 2,
+      "title": "Applications and workload portfolio",
+      "kicker": "What is actually moving",
+      "focus": "Whether you can name it, rank it, and treat it",
+      "body": "Migration failures are rarely technical surprises. They are inventory surprises - the database nobody mentioned, the service one person maintains, the application that turns out to be three. This section asks whether that list exists.",
+      "question_count": 4,
+      "points": 20
+    },
+    {
+      "n": 3,
+      "title": "Infrastructure and target platform",
+      "kicker": "From what, to what",
+      "focus": "Both ends of the move",
+      "body": "A migration has two environments and most plans describe only one. Documentation of what runs today is what makes the move repeatable; a defined target is what stops the first workload setting the architecture for everything after it.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 4,
+      "title": "Data, dependencies, and integration",
+      "kicker": "The hidden wiring",
+      "focus": "What breaks when something moves",
+      "body": "This is where cutovers go wrong. Dependencies held in people's heads are invisible until the weekend they matter, and data that has never been classified cannot be moved responsibly, however easy it is to copy.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 5,
+      "title": "Security, compliance, and governance",
+      "kicker": "Before it is sensitive",
+      "focus": "Access, obligation, and control",
+      "body": "Every control here is cheaper to design before the migration than to retrofit after it. That is the whole point of asking now: an identity model added later has to be applied to a running estate.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 6,
+      "title": "Operations, resilience, and cutover",
+      "kicker": "The weekend itself",
+      "focus": "Recovering, seeing, and switching over",
+      "body": "Three questions about the day of the move and every day after it. An untested backup is the clearest example in this assessment of something that looks like safety and is not - and rollback is the plan you need precisely when nothing is going to plan.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 7,
+      "title": "People, skills, and change",
+      "kicker": "Who carries it",
+      "focus": "Ownership, capability, and everyone affected",
+      "body": "Migrations are decided by people with other jobs. This section asks who is accountable when a decision is needed at 2am, whether the team can operate what they are being given, and whether anyone outside IT has been told.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 8,
+      "title": "Budget, timeline, and waves",
+      "kicker": "The commercial reality",
+      "focus": "What it costs, and when",
+      "body": "Two questions that decide whether the plan survives contact with a finance review. The expensive assumption is that the cloud bill will resemble the current one; the expensive omission is parallel running, which is paid for twice by definition.",
+      "question_count": 2,
+      "points": 10
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q01",
+      "section": 1,
+      "type": "multi",
+      "required": true,
+      "scored": false,
+      "text": "Where do your systems run today?",
+      "help": "Tick everything that applies.",
+      "options": [
+        {
+          "id": "on_prem",
+          "label": "Servers in our own offices"
+        },
+        {
+          "id": "datacentre",
+          "label": "A private data centre or colocation"
+        },
+        {
+          "id": "shared_hosting",
+          "label": "Shared web hosting"
+        },
+        {
+          "id": "vps",
+          "label": "VPS or dedicated servers at a hosting provider"
+        },
+        {
+          "id": "single_cloud",
+          "label": "One public cloud (AWS, Azure, or Google)"
+        },
+        {
+          "id": "multi_cloud",
+          "label": "More than one public cloud"
+        },
+        {
+          "id": "hybrid",
+          "label": "A mix of cloud and on-premises"
+        },
+        {
+          "id": "unknown_env",
+          "label": "I do not know",
+          "exclusive": true
+        }
+      ]
+    },
+    {
+      "id": "Q02",
+      "section": 1,
+      "type": "single",
+      "required": true,
+      "scored": false,
+      "text": "Roughly how many servers or applications are in scope?",
+      "help": "An estimate is fine. It changes the shape of the engagement, not your score.",
+      "options": [
+        {
+          "id": "s1_5",
+          "label": "1–5"
+        },
+        {
+          "id": "s6_20",
+          "label": "6–20"
+        },
+        {
+          "id": "s21_50",
+          "label": "21–50"
+        },
+        {
+          "id": "s51_200",
+          "label": "51–200"
+        },
+        {
+          "id": "s200_plus",
+          "label": "More than 200"
+        },
+        {
+          "id": "unknown_scale",
+          "label": "I do not know"
+        }
+      ]
+    },
+    {
+      "id": "Q03",
+      "section": 1,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "business_case",
+      "text": "What is the main reason your organisation is considering migration?",
+      "help": "Every real driver scores the same. Only \"not sure yet\" costs you points, because a migration without a reason has nothing to be measured against.",
+      "options": [
+        {
+          "id": "cost",
+          "label": "Reduce infrastructure or data-centre operating costs",
+          "points": 3
+        },
+        {
+          "id": "scale",
+          "label": "Improve scalability or handle growth",
+          "points": 3
+        },
+        {
+          "id": "reliability",
+          "label": "Improve reliability, backup, or disaster recovery",
+          "points": 3
+        },
+        {
+          "id": "modernise",
+          "label": "Modernise applications and accelerate delivery",
+          "points": 3
+        },
+        {
+          "id": "exit_hosting",
+          "label": "Exit a current hosting or data-centre arrangement",
+          "points": 3
+        },
+        {
+          "id": "compliance",
+          "label": "Meet a customer, investor, or regulatory requirement",
+          "points": 3
+        },
+        {
+          "id": "analytics",
+          "label": "Enable analytics, AI, or new digital products",
+          "points": 3
+        },
+        {
+          "id": "unsure",
+          "label": "We are not sure yet",
+          "points": 0,
+          "tags": ["business_case"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q04",
+      "section": 1,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "business_case",
+      "text": "Have you defined how you will measure migration success?",
+      "options": [
+        {
+          "id": "agreed",
+          "label": "Yes, with agreed business and technical targets",
+          "points": 5
+        },
+        {
+          "id": "informal",
+          "label": "Some targets exist, but they are not formally agreed",
+          "points": 3
+        },
+        {
+          "id": "move_to_cloud",
+          "label": "Success is mainly described as \"move to the cloud\"",
+          "points": 1,
+          "tags": ["business_case"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["business_case"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["business_case"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q05",
+      "section": 1,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "people_and_change",
+      "text": "Is there an executive sponsor who can decide on budget, priorities, risk, and timelines?",
+      "options": [
+        {
+          "id": "clear",
+          "label": "Yes, with clear authority and active involvement",
+          "points": 5
+        },
+        {
+          "id": "exists",
+          "label": "A sponsor exists but is not consistently involved",
+          "points": 3
+        },
+        {
+          "id": "informal",
+          "label": "Support is informal or divided among stakeholders",
+          "points": 1,
+          "tags": ["people_and_change"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["people_and_change"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["people_and_change"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q06",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "discovery_and_inventory",
+      "text": "Do you have an inventory of your applications, servers, databases, environments, and owners?",
+      "options": [
+        {
+          "id": "current",
+          "label": "Yes, current and maintained",
+          "points": 5
+        },
+        {
+          "id": "outdated",
+          "label": "A mostly complete inventory exists but may be outdated",
+          "points": 3
+        },
+        {
+          "id": "scattered",
+          "label": "The information is spread across documents and people's knowledge",
+          "points": 1,
+          "tags": ["discovery_and_inventory"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["discovery_and_inventory"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["discovery_and_inventory"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q07",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "application_modernisation",
+      "text": "Have you classified workloads by business criticality and acceptable downtime?",
+      "options": [
+        {
+          "id": "classified",
+          "label": "Yes, with owners and recovery targets",
+          "points": 5
+        },
+        {
+          "id": "some",
+          "label": "Some critical applications are classified",
+          "points": 3
+        },
+        {
+          "id": "informal",
+          "label": "Classification is informal",
+          "points": 1,
+          "tags": ["application_modernisation"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["application_modernisation"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["application_modernisation"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q08",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "application_modernisation",
+      "text": "How would you describe the applications you plan to migrate?",
+      "options": [
+        {
+          "id": "modern",
+          "label": "Mostly modern, documented, and independently deployable",
+          "points": 5
+        },
+        {
+          "id": "mixed",
+          "label": "A mixture of modern and legacy applications",
+          "points": 3
+        },
+        {
+          "id": "legacy",
+          "label": "Mostly legacy, tightly coupled, or poorly documented",
+          "points": 1,
+          "tags": ["application_modernisation"]
+        },
+        {
+          "id": "unknown",
+          "label": "We do not know",
+          "points": 0,
+          "tags": ["discovery_and_inventory"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q09",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "application_modernisation",
+      "text": "Have you considered how each workload should be treated?",
+      "help": "The usual treatments are rehost, replatform, refactor, repurchase, retire, retain, and relocate.",
+      "options": [
+        {
+          "id": "documented",
+          "label": "Yes, each major workload has a documented treatment",
+          "points": 5
+        },
+        {
+          "id": "broad_idea",
+          "label": "We have a broad idea for some workloads",
+          "points": 3
+        },
+        {
+          "id": "same_approach",
+          "label": "We expect to move everything using the same approach",
+          "points": 1,
+          "tags": ["application_modernisation"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["application_modernisation"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["application_modernisation"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "discovery_and_inventory",
+      "text": "How well documented is your current infrastructure?",
+      "options": [
+        {
+          "id": "documented",
+          "label": "Current diagrams, configurations, ownership, and dependencies are documented",
+          "points": 5
+        },
+        {
+          "id": "core",
+          "label": "Core infrastructure is documented but details are missing",
+          "points": 3
+        },
+        {
+          "id": "outdated",
+          "label": "Documentation is outdated or depends on individual staff members",
+          "points": 1,
+          "tags": ["discovery_and_inventory"]
+        },
+        {
+          "id": "little",
+          "label": "Little or no documentation exists",
+          "points": 0,
+          "tags": ["discovery_and_inventory"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["discovery_and_inventory"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q11",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "landing_zone_and_governance",
+      "text": "Have you defined the target cloud or hybrid environment?",
+      "options": [
+        {
+          "id": "defined",
+          "label": "Yes, including regions, services, networking, identity, and operating model",
+          "points": 5
+        },
+        {
+          "id": "provider_selected",
+          "label": "The target provider is selected, but the architecture is not defined",
+          "points": 3
+        },
+        {
+          "id": "comparing",
+          "label": "We are comparing options",
+          "points": 1,
+          "tags": ["landing_zone_and_governance"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["landing_zone_and_governance"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["landing_zone_and_governance"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q12",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "landing_zone_and_governance",
+      "text": "Have you planned development, test, staging, production, connectivity, DNS, and network security for the target environment?",
+      "options": [
+        {
+          "id": "designed",
+          "label": "Yes, with a documented target design",
+          "points": 5
+        },
+        {
+          "id": "some",
+          "label": "Some areas are planned",
+          "points": 3
+        },
+        {
+          "id": "provider_decides",
+          "label": "We expect the provider to determine this during migration",
+          "points": 1,
+          "tags": ["landing_zone_and_governance"]
+        },
+        {
+          "id": "not_started",
+          "label": "Planning has not started",
+          "points": 0,
+          "tags": ["landing_zone_and_governance"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["landing_zone_and_governance"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q13",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "dependency_and_data",
+      "text": "Do you know which applications, databases, identity systems, third parties, and networks depend on each other?",
+      "options": [
+        {
+          "id": "mapped",
+          "label": "Yes, dependencies are mapped and validated",
+          "points": 5
+        },
+        {
+          "id": "major_known",
+          "label": "Major dependencies are known but the map is incomplete",
+          "points": 3
+        },
+        {
+          "id": "in_people",
+          "label": "Dependencies are mainly held in people's knowledge",
+          "points": 1,
+          "tags": ["dependency_and_data"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["dependency_and_data"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["dependency_and_data"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q14",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "dependency_and_data",
+      "text": "Have you classified the data that will move, and assessed how it can be transferred, stored, backed up, and deleted?",
+      "options": [
+        {
+          "id": "classified",
+          "label": "Yes, including sensitive data and transfer requirements",
+          "points": 5
+        },
+        {
+          "id": "some",
+          "label": "Some data is classified",
+          "points": 3
+        },
+        {
+          "id": "informal",
+          "label": "Data classification is informal",
+          "points": 1,
+          "tags": ["dependency_and_data"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["dependency_and_data"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["dependency_and_data"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q15",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "dependency_and_data",
+      "text": "Have you measured the latency, throughput, storage, compute, and connectivity requirements of critical workloads?",
+      "options": [
+        {
+          "id": "measured",
+          "label": "Yes, using current workload measurements",
+          "points": 5
+        },
+        {
+          "id": "some",
+          "label": "Some requirements are known",
+          "points": 3
+        },
+        {
+          "id": "estimate_later",
+          "label": "We plan to estimate them during migration",
+          "points": 1,
+          "tags": ["dependency_and_data"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["dependency_and_data"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["dependency_and_data"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q16",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "security_and_compliance",
+      "text": "Do you have a target identity and access-control model for the cloud environment?",
+      "options": [
+        {
+          "id": "defined",
+          "label": "Yes, with roles, least privilege, MFA, separation of duties, and ownership",
+          "points": 5
+        },
+        {
+          "id": "basic",
+          "label": "A basic model exists but needs refinement",
+          "points": 3
+        },
+        {
+          "id": "shared_manual",
+          "label": "Access is managed mainly through shared or manual practices",
+          "points": 1,
+          "tags": ["security_and_compliance"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["security_and_compliance"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["security_and_compliance"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q17",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "security_and_compliance",
+      "text": "Have you identified the data-protection, regulatory, contractual, and data-residency requirements that apply to your workloads?",
+      "options": [
+        {
+          "id": "documented",
+          "label": "Yes, documented and reviewed by the appropriate owners",
+          "points": 5
+        },
+        {
+          "id": "some",
+          "label": "Some requirements are known",
+          "points": 3
+        },
+        {
+          "id": "after_migration",
+          "label": "We expect to address this after migration",
+          "points": 1,
+          "tags": ["security_and_compliance"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["security_and_compliance"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["security_and_compliance"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q18",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "landing_zone_and_governance",
+      "text": "Have you defined governance controls for accounts, logging, encryption, network boundaries, tagging, budgets, and policy enforcement?",
+      "options": [
+        {
+          "id": "defined",
+          "label": "Yes, and they will be implemented before production migration",
+          "points": 5
+        },
+        {
+          "id": "some",
+          "label": "Some controls are defined",
+          "points": 3
+        },
+        {
+          "id": "later",
+          "label": "Controls are expected to be added later",
+          "points": 1,
+          "tags": ["landing_zone_and_governance"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["landing_zone_and_governance"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["landing_zone_and_governance"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q19",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "recovery_and_operations",
+      "text": "Are backups and recovery procedures defined and tested for critical systems?",
+      "options": [
+        {
+          "id": "tested",
+          "label": "Yes, with recovery objectives and successful tests",
+          "points": 5
+        },
+        {
+          "id": "occasional",
+          "label": "Backups exist and are tested occasionally",
+          "points": 3
+        },
+        {
+          "id": "untested",
+          "label": "Backups exist but recovery has not been tested",
+          "points": 1,
+          "tags": ["recovery_and_operations"]
+        },
+        {
+          "id": "inconsistent",
+          "label": "Backups are inconsistent or absent",
+          "points": 0,
+          "tags": ["recovery_and_operations"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["recovery_and_operations"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q20",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "recovery_and_operations",
+      "text": "Do you have monitoring, alerting, logs, dashboards, and support ownership for critical workloads?",
+      "options": [
+        {
+          "id": "owned",
+          "label": "Yes, with defined ownership and actionable alerts",
+          "points": 5
+        },
+        {
+          "id": "partial",
+          "label": "Some monitoring exists but coverage is incomplete",
+          "points": 3
+        },
+        {
+          "id": "manual",
+          "label": "Teams mostly inspect systems manually",
+          "points": 1,
+          "tags": ["recovery_and_operations"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["recovery_and_operations"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["recovery_and_operations"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q21",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "recovery_and_operations",
+      "text": "Have you planned migration waves, cutover windows, user communication, validation, rollback, and failback?",
+      "options": [
+        {
+          "id": "tested_pilot",
+          "label": "Yes, with a tested pilot and documented runbooks",
+          "points": 5
+        },
+        {
+          "id": "high_level",
+          "label": "A high-level plan exists",
+          "points": 3
+        },
+        {
+          "id": "decide_during",
+          "label": "We expect to decide during the migration",
+          "points": 1,
+          "tags": ["recovery_and_operations"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["recovery_and_operations"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["recovery_and_operations"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q22",
+      "section": 7,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "people_and_change",
+      "text": "Is there a named person or team accountable for the migration outcome?",
+      "options": [
+        {
+          "id": "accountable",
+          "label": "Yes, with authority, responsibilities, and escalation paths",
+          "points": 5
+        },
+        {
+          "id": "lead_only",
+          "label": "A lead exists but responsibilities are not fully defined",
+          "points": 3
+        },
+        {
+          "id": "informal",
+          "label": "Responsibility is shared informally",
+          "points": 1,
+          "tags": ["people_and_change"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["people_and_change"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["people_and_change"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q23",
+      "section": 7,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "people_and_change",
+      "text": "Does your team have the skills to design, migrate, secure, and operate the target environment?",
+      "options": [
+        {
+          "id": "full",
+          "label": "Yes, across architecture, networking, security, automation, and operations",
+          "points": 5
+        },
+        {
+          "id": "gaps",
+          "label": "Some skills exist but specialist gaps remain",
+          "points": 3
+        },
+        {
+          "id": "limited",
+          "label": "Capability is limited and mostly dependent on external support",
+          "points": 1,
+          "tags": ["people_and_change"]
+        },
+        {
+          "id": "none",
+          "label": "No",
+          "points": 0,
+          "tags": ["people_and_change"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["people_and_change"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q24",
+      "section": 7,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "people_and_change",
+      "text": "Have affected employees, customers, suppliers, and support teams been considered in the plan?",
+      "options": [
+        {
+          "id": "planned",
+          "label": "Yes, with communication, training, support, and change plans",
+          "points": 5
+        },
+        {
+          "id": "identified",
+          "label": "Key stakeholders have been identified",
+          "points": 3
+        },
+        {
+          "id": "technical_only",
+          "label": "Technical staff are planning it without broader stakeholder input",
+          "points": 1,
+          "tags": ["people_and_change"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["people_and_change"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["people_and_change"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q25",
+      "section": 8,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "business_case",
+      "text": "Have you estimated the cost of migration and of ongoing operation in the target environment?",
+      "options": [
+        {
+          "id": "modelled",
+          "label": "Yes, including migration, parallel running, licensing, support, data transfer, and ongoing cost",
+          "points": 5
+        },
+        {
+          "id": "high_level",
+          "label": "A high-level estimate exists",
+          "points": 3
+        },
+        {
+          "id": "assumed_cheaper",
+          "label": "We expect the cloud bill to be similar or lower, without having modelled it",
+          "points": 1,
+          "tags": ["business_case"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["business_case"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["business_case"],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q26",
+      "section": 8,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "business_case",
+      "text": "Do you have a realistic timeline and migration-wave plan?",
+      "options": [
+        {
+          "id": "waves",
+          "label": "Yes, with a pilot, dependencies, owners, milestones, and decision gates",
+          "points": 5
+        },
+        {
+          "id": "date_only",
+          "label": "A target date exists but the wave plan is incomplete",
+          "points": 3
+        },
+        {
+          "id": "urgency",
+          "label": "The date is driven mainly by urgency or a contract deadline",
+          "points": 1,
+          "tags": ["business_case"]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": ["business_case"]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": ["business_case"],
+          "unknown": true
+        }
+      ]
+    }
+  ],
+  "lead_fields": [
+    {
+      "id": "L01",
+      "type": "text",
+      "required": true,
+      "text": "What is your name?",
+      "max_length": 120
+    },
+    {
+      "id": "L02",
+      "type": "contact",
+      "required": true,
+      "text": "How should we reach you?",
+      "channels": [
+        {
+          "id": "email",
+          "label": "Work email",
+          "validate": "email"
+        }
+      ]
+    },
+    {
+      "id": "L03",
+      "type": "single",
+      "required": true,
+      "text": "What best describes your role?",
+      "options": [
+        {
+          "id": "founder",
+          "label": "Founder or business owner"
+        },
+        {
+          "id": "cto",
+          "label": "CTO or technical director"
+        },
+        {
+          "id": "it_manager",
+          "label": "IT manager"
+        },
+        {
+          "id": "infra_engineer",
+          "label": "Infrastructure, cloud, or DevOps engineer"
+        },
+        {
+          "id": "finance_ops",
+          "label": "Finance or operations manager"
+        },
+        {
+          "id": "transformation",
+          "label": "Digital-transformation manager"
+        },
+        {
+          "id": "consultant",
+          "label": "Consultant or agency"
+        },
+        {
+          "id": "other",
+          "label": "Other"
+        }
+      ]
+    },
+    {
+      "id": "L04",
+      "type": "multi",
+      "required": true,
+      "max_selections": 3,
+      "text": "What would you like help with first?",
+      "help": "Choose up to three.",
+      "options": [
+        {
+          "id": "readiness_check",
+          "label": "Understand whether we are ready to migrate"
+        },
+        {
+          "id": "business_case",
+          "label": "Build a migration business case and TCO model"
+        },
+        {
+          "id": "discovery",
+          "label": "Discover and document our current environment"
+        },
+        {
+          "id": "landing_zone",
+          "label": "Design a secure cloud landing zone"
+        },
+        {
+          "id": "migrate_workloads",
+          "label": "Migrate servers, applications, and databases"
+        },
+        {
+          "id": "modernise",
+          "label": "Modernise legacy applications"
+        },
+        {
+          "id": "dr_cutover",
+          "label": "Plan backup, disaster recovery, and cutover"
+        },
+        {
+          "id": "cloud_to_cloud",
+          "label": "Move from one cloud provider to another"
+        },
+        {
+          "id": "strategy_session",
+          "label": "Book a cloud migration strategy session"
+        }
+      ]
+    },
+    {
+      "id": "L05",
+      "type": "text",
+      "required": true,
+      "text": "What is your company called?",
+      "max_length": 160
+    },
+    {
+      "id": "L06",
+      "type": "checkbox",
+      "required": false,
+      "wording_version": "migration-consent-1.0",
+      "text": "Send me my report and occasional cloud migration guidance from Cloudboosta.",
+      "default": false,
+      "gates_result": false
+    },
+    {
+      "id": "L07",
+      "type": "single",
+      "required": false,
+      "text": "Where are you based?",
+      "options": [
+        {
+          "id": "NG",
+          "label": "Nigeria"
+        },
+        {
+          "id": "GB",
+          "label": "United Kingdom"
+        },
+        {
+          "id": "US",
+          "label": "United States"
+        },
+        {
+          "id": "CA",
+          "label": "Canada"
+        },
+        {
+          "id": "ZA",
+          "label": "South Africa"
+        },
+        {
+          "id": "KE",
+          "label": "Kenya"
+        },
+        {
+          "id": "GH",
+          "label": "Ghana"
+        },
+        {
+          "id": "other",
+          "label": "Somewhere else"
+        }
+      ]
+    }
+  ],
+  "payload_map": {
+    "fields": {
+      "current_environment": {
+        "field": "Q01",
+        "mode": "labels"
+      },
+      "workload_scale": {
+        "field": "Q02",
+        "mode": "label"
+      },
+      "migration_driver": {
+        "field": "Q03",
+        "mode": "label"
+      },
+      "migration_timeline": {
+        "field": "Q26",
+        "mode": "label"
+      },
+      "name": {
+        "field": "L01",
+        "mode": "raw"
+      },
+      "contact": {
+        "field": "L02",
+        "mode": "raw"
+      },
+      "role": {
+        "field": "L03",
+        "mode": "label"
+      },
+      "desired_help": {
+        "field": "L04",
+        "mode": "labels"
+      },
+      "company": {
+        "field": "L05",
+        "mode": "raw"
+      },
+      "country": {
+        "field": "L07",
+        "mode": "value"
+      }
+    },
+    "context": [
+      "current_environment",
+      "workload_scale",
+      "migration_driver",
+      "migration_timeline"
+    ],
+    "consent_field": "L06"
+  },
+  "copy": {
+    "landing": {
+      "eyebrow": "Free assessment",
+      "title": "How ready are you to move to the cloud?",
+      "body": "Answer 26 short questions about your applications, data, security, operations, people, and budget. You will get a migration readiness score, your biggest risk, a portfolio strategy direction, and three practical next steps.",
+      "meta": [
+        "Takes 6–8 minutes",
+        "No cloud, server, or database credentials needed",
+        "Works whether you are on shared hosting or another cloud"
+      ],
+      "start": "Start the assessment"
+    },
+    "result": {
+      "intro": "Your Cloud Migration Readiness Score shows how prepared your organisation is to plan and run a controlled migration. It is the start of a conversation, not a verdict on your infrastructure.",
+      "disclaimer": "This result is based on your answers. It is not a migration plan, a TCO model, a security audit, or a compliance assessment. A detailed roadmap requires application discovery, dependency mapping, and a strategy session.",
+      "primary_heading": "Your biggest risk",
+      "secondary_heading": "Also worth reviewing",
+      "actions_heading": "Three things to do next",
+      "direction_heading": "Likely portfolio direction",
+      "direction_note": "One direction for the portfolio, not a decision per application. Every workload still needs its own treatment, and the seven above are the ones worth arguing about in the session.",
+      "cta": "Book a cloud migration strategy session",
+      "cta_support": "Discuss your migration goals, current environment, risks, and timeline with our team, and define the right next step.",
+      "email_heading": "Your full report is on its way",
+      "email_body_email": "We have sent the complete breakdown to {contact} — every finding, the reasoning behind it, and the three things to do first.",
+      "email_hint": "It usually arrives within a minute. If it does not, check your spam folder before assuming it went missing.",
+      "email_failed_heading": "We could not send your report",
+      "email_failed_body": "Your score and findings are on this screen, and nothing has been lost. We will retry shortly — if it does not arrive, reply to any Cloudboosta message and we will send it by hand."
+    },
+    "consent_note": "We will only email or message you beyond this result if you tick the box below.",
+    "findings": {
+      "discovery_and_inventory": {
+        "title": "Discovery and inventory",
+        "body": "Your highest-priority work is to understand what you have before deciding how to move it. Build an application, infrastructure, dependency, ownership, and data catalogue first — every later decision about waves, treatments, cost, and cutover is an estimate until it exists.",
+        "actions": [
+          "List every application, server, database, and environment, with a named owner beside each one.",
+          "Mark the ten that matter most to the business and get those completely right before widening.",
+          "Record what you do not know as an open question rather than leaving the row blank."
+        ]
+      },
+      "dependency_and_data": {
+        "title": "Dependencies and data movement",
+        "body": "Map application, database, identity, network, third-party, and branch dependencies before defining migration waves and cutover plans. Cutovers rarely fail on the workload being moved; they fail on the thing quietly attached to it.",
+        "actions": [
+          "Draw the dependency map for your two most critical applications, including anything outside your network.",
+          "Classify the data that will move, and confirm how much of it can move in the window you have.",
+          "Measure real latency and throughput between the systems that talk to each other most."
+        ]
+      },
+      "security_and_compliance": {
+        "title": "Security and compliance",
+        "body": "Establish a security and data-governance baseline before moving sensitive workloads: access control, encryption, logging, retention, data residency, and the regulatory obligations that apply to you. Retrofitting an identity model onto a running estate costs several times what designing it now does.",
+        "actions": [
+          "Write down the target identity model — roles, least privilege, MFA, and who approves access.",
+          "Identify which data is regulated, where it is allowed to live, and who owns that decision.",
+          "Confirm encryption, logging, and retention requirements before the first workload moves, not after."
+        ]
+      },
+      "landing_zone_and_governance": {
+        "title": "Landing zone and governance",
+        "body": "Prepare the target environment before the first migration wave: account or subscription structure, identity, network boundaries, logging, security guardrails, budgets, tagging, and operational ownership. A landing zone assembled workload by workload becomes the architecture by accident.",
+        "actions": [
+          "Define the account or subscription structure and the network boundaries between environments.",
+          "Set budgets, tagging, and logging as guardrails now, so cost and access are legible from the first day.",
+          "Name who owns the landing zone after go-live, and what they are allowed to change."
+        ]
+      },
+      "application_modernisation": {
+        "title": "Application portfolio and treatment",
+        "body": "Avoid applying one migration method to every workload. Classify applications and decide individually whether each should be rehosted, replatformed, refactored, repurchased, retired, retained, or relocated — lift-and-shift applied to a whole estate moves the problems along with the servers.",
+        "actions": [
+          "Rank your applications by business criticality and by acceptable downtime, and get both agreed.",
+          "Assign a treatment to each of your top ten workloads, with a sentence of reasoning beside each.",
+          "Identify anything that can be retired or replaced before migration, so you do not pay to move it."
+        ]
+      },
+      "recovery_and_operations": {
+        "title": "Recovery and operational readiness",
+        "body": "Define recovery objectives, monitoring, alerting, support ownership, runbooks, backup validation, and a rollback or failback plan before production cutover. The migration is one weekend; operating what you moved is every week after it.",
+        "actions": [
+          "Restore a backup into a scratch environment and time it. An untested backup is not a backup.",
+            "Write the cutover runbook for one workload, including the point at which you would roll back.",
+          "Agree who is on call during and after each wave, and how a problem reaches them."
+        ]
+      },
+      "people_and_change": {
+        "title": "People, ownership, and change",
+        "body": "Create a migration operating model: accountable owners, the skills to design and run the target environment, stakeholder communication, user support, training, and a clear handover. Migrations stall on decisions nobody is empowered to make far more often than on technology.",
+        "actions": [
+          "Name one accountable owner for the migration outcome, with the authority to decide and to escalate.",
+          "List the specialist skills you will need and decide for each whether you hire, train, or bring in help.",
+          "Tell the people outside IT who will feel the change what is happening, and when."
+        ]
+      },
+      "business_case": {
+        "title": "Business case and planning",
+        "body": "Define the business case before choosing a migration path: current operating cost, migration effort, parallel running, licensing, support, data transfer, and target cloud cost — measured against the outcome you actually want. Migration does not reduce cost by itself; a modelled and governed target environment does.",
+        "actions": [
+          "Write down what success looks like in numbers, and who agreed to them.",
+          "Model the target cloud cost, and include parallel running — during migration you pay for both estates.",
+          "Turn the target date into waves with owners and decision gates, or it will remain a wish."
+        ]
+      },
+      "continuous_improvement": {
+        "title": "Ready for a controlled pilot",
+        "body": "No single area stands out as your blocker, which at this level is the finding. The work now is validating the plan against reality: a pilot wave with a real workload, real data volumes, real cutover timings, and a rollback you actually exercise.",
+        "actions": [
+          "Pick one representative workload and run it as a genuine pilot, cutover and rollback included.",
+          "Compare measured performance and cost against your model, and correct the model rather than the memory.",
+          "Use the pilot to fix the runbook before the waves that carry your critical systems."
+        ]
+      },
+      "managed_migration": {
+        "title": "A structured migration engagement",
+        "body": "Based on your answers, a structured migration engagement is likely to be the fastest route: discovery and business case, landing-zone preparation, a pilot migration, then the waves — with operational handover to your team at the end rather than a dependency on ours.",
+        "actions": []
+      }
+    },
+    "directions": {
+      "discovery_first": {
+        "title": "Do not choose a direction yet",
+        "short": "Discovery first",
+        "body": "None of the seven treatments can be chosen responsibly from where you are standing. Without an inventory, a strategy direction is a guess that will be expensive to reverse. Run discovery first; the direction becomes obvious once the portfolio is visible."
+      },
+      "retire": {
+        "title": "Retire",
+        "short": "Switch it off",
+        "body": "Identify systems that can be retired before migration, so the organisation does not move unnecessary cost and complexity to the cloud. Nothing is cheaper to migrate than something you have decided to turn off."
+      },
+      "retain": {
+        "title": "Retain",
+        "short": "Leave it, for now",
+        "body": "Retain selected workloads temporarily while dependencies, data requirements, or business value are clarified. Retaining deliberately is a decision; retaining by accident is what happens when the wave plan runs out of time."
+      },
+      "rehost": {
+        "title": "Rehost",
+        "short": "Move it as it is",
+        "body": "A rehost-first approach may help you move quickly, but validate performance, licensing, security, and operating cost before scaling the pattern. Lift-and-shift moves the architecture you have, including the parts you were hoping to leave behind."
+      },
+      "relocate": {
+        "title": "Relocate",
+        "short": "Move the platform",
+        "body": "Consider relocation where the platform and its tooling can move with minimal application change, subject to provider and licensing constraints. It is the least disruptive route out of a data centre, and the one most often blocked by a licence."
+      },
+      "replatform": {
+        "title": "Replatform",
+        "short": "Adjust, then move",
+        "body": "Replatform selected components where managed databases, containers, autoscaling, or managed services can reduce operational burden without a full rewrite. This is usually where the return is, and usually where teams underestimate the testing."
+      },
+      "repurchase": {
+        "title": "Repurchase",
+        "short": "Buy it instead",
+        "body": "Evaluate repurchasing selected capabilities through SaaS rather than migrating and maintaining the existing application. The question to ask of each custom system is whether maintaining it is still a competitive advantage."
+      },
+      "refactor": {
+        "title": "Refactor",
+        "short": "Rebuild for the cloud",
+        "body": "Refactor only the workloads where the long-term business value justifies the higher delivery effort and migration risk. Refactoring during a migration doubles the number of things that can be blamed when something breaks."
+      }
+    },
+    "email": {
+      "product": "Cloud Migration Assessment",
+      "score_label": "Cloud Migration Readiness Score",
+      "report_line": "Here is your full Cloud Migration Readiness report.",
+      "operator_summary": [
+        {
+          "label": "Today",
+          "key": "current_environment"
+        },
+        {
+          "label": "Scale",
+          "key": "workload_scale"
+        },
+        {
+          "label": "Driver",
+          "key": "migration_driver"
+        },
+        {
+          "label": "Timeline",
+          "key": "migration_timeline"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,89 @@
+/* Next-webinar registration — NIGHTSHIFT page-specific rules.
+   One page, one CTA: everything funnels to #register. */
+.whero{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;min-height:clamp(640px,92svh,960px);padding:150px 0 80px}
+.whero-glow{position:absolute;inset:-20% -10% auto;height:120%;background:radial-gradient(560px 420px at 78% 18%,rgba(23,54,255,.22),transparent 65%),radial-gradient(680px 480px at 12% 82%,rgba(23,54,255,.10),transparent 70%);pointer-events:none}
+.whero-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:clamp(32px,5vw,72px);align-items:center}
+.whero .lead{max-width:52ch}
+.whero h1{margin:22px 0 0;line-height:1.02;font-size:clamp(38px,5vw,68px)}
+.whero-sub{margin:14px 0 0;font-weight:300;font-size:clamp(22px,2.5vw,32px);line-height:1.15;letter-spacing:-.02em;color:var(--blue-text);max-width:30ch}
+.whero .lead{margin-top:26px}
+/* the event's facts: label over value, two by two */
+.wfacts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:34px 0 0;max-width:600px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--line)}
+.whero .btn-row{margin-top:30px}
+.wfact{padding:18px 20px;background:var(--bg2)}
+.wfact dt{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.wfact dt svg{width:16px;height:16px;flex:none;color:var(--blue-text)}
+.wfact dd{margin:8px 0 0;font-size:17px;font-weight:600;line-height:1.35;color:var(--ink)}
+.wfact dd small{display:block;margin-top:3px;font-size:14px;font-weight:400;color:var(--ink2)}
+.btn-lg{padding:16px 28px;font-size:17px}
+/* countdown: quiet, mono, no card chrome */
+.wcd{display:flex;gap:clamp(14px,2.4vw,28px);margin-top:36px}
+.wcd-c{display:flex;flex-direction:column;min-width:56px}
+.wcd-c b{font-family:var(--mono-stack,monospace);font-weight:600;font-size:clamp(26px,2.6vw,36px);color:var(--ink);font-variant-numeric:tabular-nums}
+.wcd-c span{margin-top:4px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+/* speaker portrait: the photo carries its own blue ground, so the frame adds
+   only an edge and a glow, and the caption sits over a fade at its foot */
+.wspk{position:relative;margin:0;justify-self:end;width:100%;max-width:440px}
+.wspk-frame{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:33/38;background:var(--bg3);border:1px solid var(--line2);box-shadow:0 40px 90px rgba(0,0,0,.55),0 10px 40px rgba(23,54,255,.22)}
+.wspk-frame img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.wspk-frame::after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(180deg,transparent,rgba(5,7,12,.72) 48%,rgba(5,7,12,.96));pointer-events:none}
+.wspk-cap{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:4px;padding:clamp(20px,2.4vw,30px)}
+.wspk-cap .tag{font-size:11px;margin-bottom:6px}
+.wspk-cap b{font-size:clamp(26px,2.6vw,34px);line-height:1.05;color:var(--ink)}
+.wspk-cap>span:not(.tag){font-size:15px;color:var(--ink2)}
+.wspk-more{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:14px;font-weight:600;color:var(--blue-text);text-decoration:none}
+.wspk-more svg{width:15px;height:15px;transition:transform .3s var(--ease)}
+.wspk-more:hover svg{transform:translateY(3px)}
+.wspk-more:focus-visible{outline:2px solid var(--blue-hi);outline-offset:4px;border-radius:4px}
+/* speaker bio */
+.wbio{border-top:1px solid var(--line)}
+.wbio-grid{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1fr);gap:clamp(32px,6vw,96px);align-items:start}
+.wbio-grid:has(.wbio-photo[hidden]){grid-template-columns:1fr}
+.wbio-photo{position:sticky;top:110px;border-radius:18px;overflow:hidden;aspect-ratio:33/38;max-width:380px;border:1px solid var(--line2);background:var(--bg3)}
+.wbio-photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.wbio-copy h2{margin:16px 0 0;font-size:clamp(34px,4vw,54px)}
+.wbio-role{margin:10px 0 0;font-size:18px;color:var(--blue-text)}
+.wbio-text{margin-top:28px;display:flex;flex-direction:column;gap:18px}
+.wbio-text .body{margin:0;max-width:64ch}
+.whero-flyer{position:relative}
+.whero-flyer img{width:100%;height:auto;border-radius:14px;border:1px solid var(--line2);box-shadow:0 30px 80px rgba(0,0,0,.5),0 8px 24px rgba(23,54,255,.12);background:var(--bg2)}
+/* agenda */
+.agenda{list-style:none;margin:40px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.agenda li{position:relative;padding:clamp(20px,2vw,28px) clamp(20px,2vw,28px) clamp(20px,2vw,28px) 58px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);font-size:16px;line-height:1.55;color:var(--ink2)}
+.agenda li::before{content:"";position:absolute;left:22px;top:calc(clamp(20px,2vw,28px) + 2px);width:18px;height:18px;border-radius:50%;background:var(--blue);opacity:.9;-webkit-mask:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4 10-10"/></svg>') center/contain no-repeat,linear-gradient(#000,#000);mask:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4 10-10"/></svg>') center/contain no-repeat}
+.agenda li b{display:block;margin-bottom:4px;color:var(--ink);font-weight:600}
+/* registration */
+.wreg{border-top:1px solid var(--line)}
+.wreg-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:start}
+.wreg-points{list-style:none;margin:28px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+.wreg-points li{position:relative;padding-left:30px;font-size:15px;color:var(--ink2)}
+.wreg-points li::before{content:"";position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;border:1px solid var(--blue-text);background:linear-gradient(180deg,rgba(23,54,255,.35),rgba(23,54,255,.12))}
+.wreg form{border:1px solid var(--line);border-radius:14px;background:var(--bg2);padding:clamp(24px,3vw,40px);position:relative}
+.wreg form.is-sent .field,.wreg form.is-sent .form-foot,.wreg form.is-sent .form-status{display:none}
+.wdone h3{font-size:clamp(26px,2.4vw,34px);margin:0 0 12px}
+/* empty state */
+.wnl{max-width:520px;margin-top:36px}
+.wnl-row{display:flex;gap:12px;margin-top:8px}
+.wnl-row .input{flex:1;min-width:0}
+.wnl-row .btn{flex:none}
+.wnl-alt{margin-top:22px}
+.wnl-alt a{color:var(--blue-text)}
+@media (max-width:960px){
+  .whero-grid{grid-template-columns:1fr}
+  .whero-flyer{max-width:420px}
+  .wspk{justify-self:start;max-width:400px}
+  .wbio-grid{grid-template-columns:1fr}
+  /* stacked, the portrait is already on screen in the hero: once is enough */
+  .wbio-photo{display:none}
+  .agenda{grid-template-columns:1fr}
+  .wreg-grid{grid-template-columns:1fr}
+}
+@media (max-width:700px){.whero{padding-top:120px;min-height:0}}
+@media (max-width:520px){.wfacts{grid-template-columns:1fr}.wnl-row{flex-direction:column}.wnl-row .btn{width:100%}.wcd-c{min-width:48px}}
+/* these set their own display, which would otherwise outrank [hidden] */
+.wspk-more[hidden],.wfact dd small[hidden]{display:none}
+/* undecided: until /api/webinar answers, show neither state (see webinar-boot.js) */
+.w-pending [data-when="none"],.w-pending [data-when="live"]{display:none}
+.w-pending [data-when="pending"]{display:block}
+.wform-note{margin:14px 0 0;font-size:13px;line-height:1.5;color:var(--ink3);max-width:52ch}
+.wform-note a{color:inherit;text-decoration:underline;text-underline-offset:2px}

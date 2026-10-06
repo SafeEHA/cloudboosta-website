@@ -1,0 +1,32 @@
+/* Assessments hub — NIGHTSHIFT page-specific rules. No style attributes may be
+   used on this page (the assessment CSP applies), so everything is a class. */
+.hub__hero{position:relative;min-height:clamp(620px,72vh,820px);overflow:hidden;display:flex;align-items:flex-end;padding:160px 0 80px}
+.hub__bg{position:absolute;inset:0}
+.hub__bg img{width:100%;height:100%;object-fit:cover;object-position:70% 50%}
+.hub__scrim{position:absolute;inset:0;background:linear-gradient(90deg,#05070C 30%,rgba(5,7,12,.85) 50%,rgba(5,7,12,.3) 75%,rgba(5,7,12,.1)),linear-gradient(180deg,rgba(5,7,12,.8),rgba(5,7,12,0) 30%,rgba(5,7,12,0) 60%,#05070C)}
+.hub__head{position:relative;display:flex;flex-direction:column;gap:22px;max-width:760px}
+.hub__title{font-size:clamp(48px,7.5vw,108px);max-width:12ch}
+.hub__lede{max-width:56ch}
+.hub__meta{display:grid;gap:10px;max-width:56ch;margin-top:8px}
+.hub__meta li{display:flex;align-items:flex-start;gap:12px;font-size:15px;color:var(--ink2);padding:10px 0;border-top:1px solid var(--line)}
+.hub__meta li svg{width:16px;height:16px;flex:none;color:var(--blue-text);margin-top:4px}
+.hub__cards{padding-top:80px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{display:flex;flex-direction:column;gap:14px;padding:clamp(24px,2.6vw,36px);border-radius:12px;border:1px solid var(--line);background:var(--bg2);transition:border-color .3s,transform .3s var(--ease)}
+a.card:hover{border-color:var(--blue-hi);transform:translateY(-4px)}
+.card--soon{opacity:.6;border-style:dashed}
+.card__title{font-size:clamp(26px,2.4vw,34px)}
+.card__tagline{font-weight:600;font-size:17px;text-wrap:balance}
+.card__summary{font-size:15px}
+.card__facts{display:flex;flex-wrap:wrap;gap:12px 26px;margin-top:auto;padding-top:18px;border-top:1px solid var(--line)}
+.card__facts div{display:flex;flex-direction:column-reverse}
+.card__facts dt{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.card__facts dd{font-family:'Funnel Display','Funnel Display Fallback',sans-serif;font-size:24px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.card__for{font-size:14px;color:var(--ink3)}
+.card__go{margin-top:6px}
+.card.d1{animation-delay:.1s}.card.d2{animation-delay:.2s}.card.d3{animation-delay:.3s}
+.hub__note{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);font-size:14px;color:var(--ink3);max-width:70ch}
+.hub__note a{color:var(--blue-text)}
+.hub__note a:hover{color:#fff}
+@media (max-width:1000px){.cards{grid-template-columns:1fr 1fr}.card:first-child{grid-column:span 2}}
+@media (max-width:660px){.cards{grid-template-columns:1fr}.card:first-child{grid-column:auto}.hub__hero{padding-top:130px}}

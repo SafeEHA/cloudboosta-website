@@ -1,0 +1,1857 @@
+{
+  "ruleset_version": "devops-1.0.0",
+  "scoring": {
+    "points_per_question": 5,
+    "raw_max": 110,
+    "secondary_threshold": 0.34,
+    "min_evidence_threshold": 0.6,
+    "min_evidence_question_count": 2,
+    "deficit_precision": 4,
+    "bands": [
+      {
+        "min": 0,
+        "max": 24,
+        "label": "Manual and fragile",
+        "interpretation": "Delivery depends heavily on individuals and manual intervention."
+      },
+      {
+        "min": 25,
+        "max": 49,
+        "label": "Emerging",
+        "interpretation": "Some DevOps practices exist, but major delivery and operations gaps remain."
+      },
+      {
+        "min": 50,
+        "max": 74,
+        "label": "Developing",
+        "interpretation": "Core practices are present but inconsistent across applications or teams."
+      },
+      {
+        "min": 75,
+        "max": 89,
+        "label": "Mature",
+        "interpretation": "Delivery is largely repeatable and measurable, with targeted gaps."
+      },
+      {
+        "min": 90,
+        "max": 100,
+        "label": "Optimised",
+        "interpretation": "Strong delivery and operational practices; the work now is platform scale and continuous improvement."
+      }
+    ]
+  },
+  "categories": [
+    {
+      "id": "delivery_automation",
+      "rank": 1,
+      "label": "Delivery automation",
+      "questions": [
+        "Q03",
+        "Q09",
+        "Q10"
+      ],
+      "max_points": 15
+    },
+    {
+      "id": "ci_cd_foundation",
+      "rank": 2,
+      "label": "CI/CD foundation",
+      "questions": [
+        "Q07",
+        "Q08"
+      ],
+      "max_points": 10
+    },
+    {
+      "id": "infrastructure_reproducibility",
+      "rank": 3,
+      "label": "Infrastructure reproducibility",
+      "questions": [
+        "Q11",
+        "Q12",
+        "Q13"
+      ],
+      "max_points": 15
+    },
+    {
+      "id": "testing_devsecops",
+      "rank": 4,
+      "label": "Testing and DevSecOps",
+      "questions": [
+        "Q14",
+        "Q15",
+        "Q16"
+      ],
+      "max_points": 15
+    },
+    {
+      "id": "observability_gap",
+      "rank": 5,
+      "label": "Observability",
+      "questions": [
+        "Q17",
+        "Q18"
+      ],
+      "max_points": 10
+    },
+    {
+      "id": "incident_and_reliability",
+      "rank": 6,
+      "label": "Reliability and incident response",
+      "questions": [
+        "Q19",
+        "Q20",
+        "Q21",
+        "Q22"
+      ],
+      "max_points": 20
+    },
+    {
+      "id": "source_control_traceability",
+      "rank": 7,
+      "label": "Source control and traceability",
+      "questions": [
+        "Q04",
+        "Q05",
+        "Q06"
+      ],
+      "max_points": 15
+    },
+    {
+      "id": "platform_and_capability",
+      "rank": 8,
+      "label": "Platform and team capability",
+      "questions": [
+        "Q23",
+        "Q24"
+      ],
+      "max_points": 10
+    }
+  ],
+  "prerequisite_gates": [
+    {
+      "category": "platform_and_capability",
+      "reason": "delivery_prerequisite",
+      "rationale": "A platform built on manual delivery industrialises the manual delivery.",
+      "blocked_when_any": [
+        {
+          "category_deficit_at_least": {
+            "category": "ci_cd_foundation",
+            "value": 0.4
+          }
+        },
+        {
+          "category_deficit_at_least": {
+            "category": "delivery_automation",
+            "value": 0.4
+          }
+        },
+        {
+          "score_below": 50
+        }
+      ]
+    }
+  ],
+  "signal_boosts": [
+    {
+      "question": "Q07",
+      "option": "unknown",
+      "category": "ci_cd_foundation",
+      "boost": 0.15
+    },
+    {
+      "question": "Q11",
+      "option": "unknown",
+      "category": "infrastructure_reproducibility",
+      "boost": 0.15
+    },
+    {
+      "question": "Q17",
+      "option": "unknown",
+      "category": "observability_gap",
+      "boost": 0.15
+    },
+    {
+      "question": "Q13",
+      "option": "in_source",
+      "category": "infrastructure_reproducibility",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "first_pipeline",
+      "category": "ci_cd_foundation",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "automate_deploys",
+      "category": "delivery_automation",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "iac",
+      "category": "infrastructure_reproducibility",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "testing_security",
+      "category": "testing_devsecops",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "monitoring_incident",
+      "category": "observability_gap",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "reduce_failures",
+      "category": "incident_and_reliability",
+      "boost": 0.1
+    },
+    {
+      "question": "L04",
+      "includes": "internal_platform",
+      "category": "platform_and_capability",
+      "boost": 0.1
+    }
+  ],
+  "managed_overlay": {
+    "id": "managed_devops",
+    "any": [
+      {
+        "score_below": 50
+      },
+      {
+        "question": "L04",
+        "includes_any": [
+          "ongoing_support",
+          "first_pipeline"
+        ]
+      },
+      {
+        "question": "Q23",
+        "equals": "no_owner"
+      },
+      {
+        "question": "Q02",
+        "equals": "no_internal_team"
+      },
+      {
+        "all": [
+          {
+            "question": "L03",
+            "equals_any": [
+              "founder",
+              "cto"
+            ]
+          },
+          {
+            "score_below": 75
+          }
+        ]
+      }
+    ]
+  },
+  "confidence_flags": [
+    {
+      "id": "frequent_releases_without_rollback",
+      "all": [
+        {
+          "question": "Q03",
+          "equals_any": [
+            "on_demand",
+            "daily_weekly"
+          ]
+        },
+        {
+          "question": "Q10",
+          "equals_any": [
+            "fix_forward",
+            "depends_on_person",
+            "none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "automated_pipeline_without_tests",
+      "all": [
+        {
+          "question": "Q07",
+          "equals": "automated"
+        },
+        {
+          "question": "Q08",
+          "equals_any": [
+            "none",
+            "few"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iac_but_environments_drift",
+      "all": [
+        {
+          "question": "Q11",
+          "equals": "iac_all"
+        },
+        {
+          "question": "Q12",
+          "equals_any": [
+            "often_differ",
+            "significantly_different"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "targets_without_observability",
+      "all": [
+        {
+          "question": "Q22",
+          "equals": "measured"
+        },
+        {
+          "question": "Q17",
+          "equals_any": [
+            "per_server",
+            "no",
+            "unknown"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "many_unknown_answers",
+      "unknown_answers_at_least": 6
+    }
+  ],
+  "sections": [
+    {
+      "n": 1,
+      "title": "Delivery context and release profile",
+      "kicker": "Context first",
+      "focus": "What you ship, and how often",
+      "body": "Only the release-frequency question here is scored. The other two decide how everything after them should be read — a two-person startup and a fifty-engineer fintech can post the same score and need opposite first moves.",
+      "question_count": 3,
+      "points": 5
+    },
+    {
+      "n": 2,
+      "title": "Source control and collaboration",
+      "kicker": "The paper trail",
+      "focus": "Whether a change can be traced",
+      "body": "This is the cheapest maturity in the whole assessment and the one most often skipped. If you cannot say which commit caused an outage, who reviewed it, and when it shipped, every incident becomes an investigation before it can become a fix.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 3,
+      "title": "CI/CD and release automation",
+      "kicker": "The main event",
+      "focus": "Build, test, deploy, and roll back",
+      "body": "The heart of it. Manual deployment is not just slow — it is the reason releases get batched, and batched releases are the reason they are risky. A rollback you have never tested is a plan, not a capability.",
+      "question_count": 4,
+      "points": 20
+    },
+    {
+      "n": 4,
+      "title": "Infrastructure as Code and environments",
+      "kicker": "Reproducibility",
+      "focus": "Whether you could rebuild it",
+      "body": "Infrastructure nobody can rebuild from code is infrastructure nobody can safely change. Environment drift is the quiet version of the same problem: it works in staging, and staging has not looked like production for a year.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 5,
+      "title": "Testing and security in delivery",
+      "kicker": "Gates, not gatekeepers",
+      "focus": "What can stop a bad release",
+      "body": "Checks that report but never block are decoration. This section asks whether quality and security are part of the pipeline or a conversation that happens after it — and, when something is found, whether anyone owns fixing it.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 6,
+      "title": "Observability and incident response",
+      "kicker": "Knowing before they do",
+      "focus": "Seeing failure, and answering it",
+      "body": "Two questions about whether you can see your systems, and one about what happens when they break. Learning about your outage from a customer is a measurable position, and it is the one this section is looking for.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 7,
+      "title": "Reliability and operational readiness",
+      "kicker": "After it ships",
+      "focus": "Backups, readiness, and targets",
+      "body": "Delivery gets the attention; operating the thing afterwards is where the cost lands. An untested backup is the clearest example in this whole assessment of something that looks like safety and is not.",
+      "question_count": 3,
+      "points": 15
+    },
+    {
+      "n": 8,
+      "title": "Team capability and continuous improvement",
+      "kicker": "Does it last?",
+      "focus": "Whether the improvement survives",
+      "body": "This section predicts the future rather than describing the present. Everything before it can be fixed in one engagement. Only this decides whether it is still fixed in a year.",
+      "question_count": 2,
+      "points": 10
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q01",
+      "section": 1,
+      "type": "single",
+      "required": true,
+      "scored": false,
+      "text": "What best describes the software you deliver?",
+      "options": [
+        {
+          "id": "saas",
+          "label": "SaaS or web application"
+        },
+        {
+          "id": "mobile_backend",
+          "label": "Mobile-app backend"
+        },
+        {
+          "id": "ecommerce",
+          "label": "E-commerce or retail platform"
+        },
+        {
+          "id": "fintech",
+          "label": "Fintech or payment application"
+        },
+        {
+          "id": "property",
+          "label": "Real-estate or property platform"
+        },
+        {
+          "id": "internal",
+          "label": "Internal business application"
+        },
+        {
+          "id": "data_ai",
+          "label": "Data, AI, or analytics platform"
+        },
+        {
+          "id": "agency",
+          "label": "Client applications managed by an agency"
+        },
+        {
+          "id": "other",
+          "label": "Other"
+        }
+      ]
+    },
+    {
+      "id": "Q02",
+      "section": 1,
+      "type": "single",
+      "required": true,
+      "scored": false,
+      "text": "How many people contribute code or operate your applications?",
+      "options": [
+        {
+          "id": "solo",
+          "label": "1 person"
+        },
+        {
+          "id": "two_to_five",
+          "label": "2–5 people"
+        },
+        {
+          "id": "six_to_fifteen",
+          "label": "6–15 people"
+        },
+        {
+          "id": "sixteen_to_fifty",
+          "label": "16–50 people"
+        },
+        {
+          "id": "over_fifty",
+          "label": "More than 50 people"
+        },
+        {
+          "id": "no_internal_team",
+          "label": "We do not have an internal technical team"
+        }
+      ]
+    },
+    {
+      "id": "Q03",
+      "section": 1,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "delivery_automation",
+      "text": "How often do you successfully release changes to production?",
+      "help": "Frequency on its own is not a quality measure. We read it alongside your rollback and reliability answers.",
+      "options": [
+        {
+          "id": "on_demand",
+          "label": "On demand, or multiple times a day",
+          "points": 5
+        },
+        {
+          "id": "daily_weekly",
+          "label": "Daily to weekly",
+          "points": 5
+        },
+        {
+          "id": "weekly_monthly",
+          "label": "Weekly to monthly",
+          "points": 3
+        },
+        {
+          "id": "monthly_biannual",
+          "label": "Monthly to every six months",
+          "points": 1,
+          "tags": [
+            "delivery_automation"
+          ]
+        },
+        {
+          "id": "rarely",
+          "label": "Less than every six months",
+          "points": 0,
+          "tags": [
+            "delivery_automation"
+          ]
+        },
+        {
+          "id": "no_process",
+          "label": "We have no regular production release process",
+          "points": 0,
+          "tags": [
+            "delivery_automation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Q04",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "source_control_traceability",
+      "text": "Is all application code stored in version control?",
+      "options": [
+        {
+          "id": "all",
+          "label": "Yes, all code is version-controlled",
+          "points": 5
+        },
+        {
+          "id": "most",
+          "label": "Most code is version-controlled",
+          "points": 3
+        },
+        {
+          "id": "some_outside",
+          "label": "Some code is stored manually or outside version control",
+          "points": 1,
+          "tags": [
+            "source_control"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "source_control"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "source_control"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q05",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "source_control_traceability",
+      "text": "How are code changes reviewed before they reach the main branch?",
+      "options": [
+        {
+          "id": "protected_required",
+          "label": "Protected branches and pull requests with required review",
+          "points": 5
+        },
+        {
+          "id": "pr_inconsistent",
+          "label": "Pull requests are used, but enforcement is inconsistent",
+          "points": 3
+        },
+        {
+          "id": "informal",
+          "label": "Informal review through chat or direct discussion",
+          "points": 1,
+          "tags": [
+            "source_control"
+          ]
+        },
+        {
+          "id": "direct_push",
+          "label": "Developers regularly push straight to the main branch",
+          "points": 0,
+          "tags": [
+            "source_control"
+          ]
+        },
+        {
+          "id": "no_process",
+          "label": "We have no consistent process",
+          "points": 0,
+          "tags": [
+            "source_control"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Q06",
+      "section": 2,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "source_control_traceability",
+      "text": "Can you trace a production change back to its commit, reviewer, ticket, and deployment?",
+      "options": [
+        {
+          "id": "automatic",
+          "label": "Yes, automatically",
+          "points": 5
+        },
+        {
+          "id": "partial",
+          "label": "Partially; some systems are linked",
+          "points": 3
+        },
+        {
+          "id": "manual",
+          "label": "We investigate manually when we need to",
+          "points": 1,
+          "tags": [
+            "traceability"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "traceability"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "traceability"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q07",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "ci_cd_foundation",
+      "text": "What happens when code is pushed, or a pull request is opened?",
+      "options": [
+        {
+          "id": "automated",
+          "label": "An automated pipeline builds and validates the change",
+          "points": 5
+        },
+        {
+          "id": "some_repos",
+          "label": "Some repositories have automated builds",
+          "points": 3
+        },
+        {
+          "id": "local",
+          "label": "Developers build locally and share the output",
+          "points": 1,
+          "tags": [
+            "ci_cd_foundation"
+          ]
+        },
+        {
+          "id": "manual",
+          "label": "Builds are entirely manual",
+          "points": 0,
+          "tags": [
+            "ci_cd_foundation"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "ci_cd_foundation"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q08",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "ci_cd_foundation",
+      "text": "Which tests run automatically before a change can be deployed?",
+      "options": [
+        {
+          "id": "full",
+          "label": "Unit, integration, and the relevant acceptance tests",
+          "points": 5
+        },
+        {
+          "id": "unit_some_integration",
+          "label": "Unit tests and some integration tests",
+          "points": 3
+        },
+        {
+          "id": "few",
+          "label": "A small number of tests, run inconsistently",
+          "points": 1,
+          "tags": [
+            "testing_devsecops"
+          ]
+        },
+        {
+          "id": "none",
+          "label": "No automated tests",
+          "points": 0,
+          "tags": [
+            "testing_devsecops"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "testing_devsecops"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q09",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "delivery_automation",
+      "text": "How is application code deployed to production?",
+      "options": [
+        {
+          "id": "pipeline",
+          "label": "Through an automated, repeatable pipeline",
+          "points": 5
+        },
+        {
+          "id": "some_automated",
+          "label": "Automated for some applications",
+          "points": 3
+        },
+        {
+          "id": "documented_manual",
+          "label": "An engineer runs a documented manual process",
+          "points": 1,
+          "tags": [
+            "ci_cd_foundation"
+          ]
+        },
+        {
+          "id": "undocumented_manual",
+          "label": "Deployment is manual and undocumented",
+          "points": 0,
+          "tags": [
+            "ci_cd_foundation"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "ci_cd_foundation"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "section": 3,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "delivery_automation",
+      "text": "If a production deployment causes a problem, how do you recover?",
+      "options": [
+        {
+          "id": "automated_rollback",
+          "label": "Automated rollback, or a tested and fast rollback process",
+          "points": 5
+        },
+        {
+          "id": "documented_manual",
+          "label": "A documented manual rollback process",
+          "points": 3
+        },
+        {
+          "id": "fix_forward",
+          "label": "The team fixes forward, under pressure",
+          "points": 1,
+          "tags": [
+            "release_safety"
+          ]
+        },
+        {
+          "id": "depends_on_person",
+          "label": "Recovery depends on finding the right person",
+          "points": 0,
+          "tags": [
+            "release_safety"
+          ]
+        },
+        {
+          "id": "none",
+          "label": "We have no defined rollback process",
+          "points": 0,
+          "tags": [
+            "release_safety"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Q11",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "infrastructure_reproducibility",
+      "text": "How are servers, networks, databases, and containers provisioned?",
+      "options": [
+        {
+          "id": "iac_all",
+          "label": "Through version-controlled Infrastructure as Code",
+          "points": 5
+        },
+        {
+          "id": "iac_some",
+          "label": "Infrastructure as Code is used for some environments",
+          "points": 3
+        },
+        {
+          "id": "scripts",
+          "label": "Through scripts and documented manual steps",
+          "points": 1,
+          "tags": [
+            "infrastructure_reproducibility"
+          ]
+        },
+        {
+          "id": "console",
+          "label": "Mostly through a provider console, or manual server work",
+          "points": 0,
+          "tags": [
+            "infrastructure_reproducibility"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "infrastructure_reproducibility"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q12",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "infrastructure_reproducibility",
+      "text": "How similar are your development, staging, and production environments?",
+      "options": [
+        {
+          "id": "templated",
+          "label": "Defined from reusable templates, and the differences are deliberate",
+          "points": 5
+        },
+        {
+          "id": "broadly_similar",
+          "label": "Broadly similar, but they drift",
+          "points": 3
+        },
+        {
+          "id": "often_differ",
+          "label": "Configured separately, and they often differ",
+          "points": 1,
+          "tags": [
+            "environment_consistency"
+          ]
+        },
+        {
+          "id": "significantly_different",
+          "label": "Significantly different",
+          "points": 0,
+          "tags": [
+            "environment_consistency"
+          ]
+        },
+        {
+          "id": "no_separate",
+          "label": "We do not have separate environments",
+          "points": 1,
+          "tags": [
+            "environment_consistency"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Q13",
+      "section": 4,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "infrastructure_reproducibility",
+      "text": "How are environment configuration and secrets managed?",
+      "help": "We never ask you to share a secret. This is about where they live, not what they are.",
+      "options": [
+        {
+          "id": "central_secure",
+          "label": "Through secure, centralised secret and configuration services",
+          "points": 5
+        },
+        {
+          "id": "mixed",
+          "label": "A mixture of secure storage and manual configuration",
+          "points": 3
+        },
+        {
+          "id": "deployment_files",
+          "label": "Values live in deployment files, or are shared by hand",
+          "points": 1,
+          "tags": [
+            "secrets_management"
+          ]
+        },
+        {
+          "id": "in_source",
+          "label": "Secrets sit in source code, chat, or shared documents",
+          "points": 0,
+          "tags": [
+            "secrets_management"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "secrets_management"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q14",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "testing_devsecops",
+      "text": "Can a failed test, lint check, or vulnerability check block a release?",
+      "options": [
+        {
+          "id": "documented_gates",
+          "label": "Yes, through gates documented for each application",
+          "points": 5
+        },
+        {
+          "id": "some_block",
+          "label": "Some checks can block a release",
+          "points": 3
+        },
+        {
+          "id": "reported_only",
+          "label": "Checks are reported, but rarely block anything",
+          "points": 1,
+          "tags": [
+            "testing_devsecops"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "testing_devsecops"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "testing_devsecops"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q15",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "testing_devsecops",
+      "text": "Do you scan dependencies, container images, or infrastructure code for security issues?",
+      "options": [
+        {
+          "id": "automated",
+          "label": "Yes, automatically, inside the delivery workflow",
+          "points": 5
+        },
+        {
+          "id": "some_automated",
+          "label": "Some scanning is automated",
+          "points": 3
+        },
+        {
+          "id": "occasional",
+          "label": "Scanning is occasional or manual",
+          "points": 1,
+          "tags": [
+            "testing_devsecops"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "testing_devsecops"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "testing_devsecops"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q16",
+      "section": 5,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "testing_devsecops",
+      "text": "When a security issue is found in delivery, who owns fixing it?",
+      "options": [
+        {
+          "id": "defined",
+          "label": "Ownership, severity, deadline, and escalation are all defined",
+          "points": 5
+        },
+        {
+          "id": "informal",
+          "label": "A technical team usually handles it, but the process is informal",
+          "points": 3
+        },
+        {
+          "id": "when_urgent",
+          "label": "Issues are addressed once they become urgent",
+          "points": 1,
+          "tags": [
+            "security_ownership"
+          ]
+        },
+        {
+          "id": "nobody",
+          "label": "Nobody is clearly responsible",
+          "points": 0,
+          "tags": [
+            "security_ownership"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "security_ownership"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q17",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "observability_gap",
+      "text": "Do you have centralised logs, metrics, traces, and dashboards for critical applications?",
+      "options": [
+        {
+          "id": "service_dashboards",
+          "label": "Yes, with service-level dashboards",
+          "points": 5
+        },
+        {
+          "id": "logs_some_metrics",
+          "label": "Logs and some metrics are centralised",
+          "points": 3
+        },
+        {
+          "id": "per_server",
+          "label": "Engineers inspect individual servers or services",
+          "points": 1,
+          "tags": [
+            "observability_gap"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "observability_gap"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "observability_gap"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q18",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "observability_gap",
+      "text": "How are production problems detected and communicated?",
+      "options": [
+        {
+          "id": "actionable",
+          "label": "Actionable alerts, with ownership, severity, and escalation",
+          "points": 5
+        },
+        {
+          "id": "noisy",
+          "label": "Alerts exist, but they are noisy or have no clear owner",
+          "points": 3
+        },
+        {
+          "id": "customers_first",
+          "label": "Customers often tell us first",
+          "points": 1,
+          "tags": [
+            "observability_gap"
+          ]
+        },
+        {
+          "id": "none",
+          "label": "There is no consistent alerting",
+          "points": 0,
+          "tags": [
+            "observability_gap"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "observability_gap"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q19",
+      "section": 6,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "incident_and_reliability",
+      "text": "How does your team respond to a production incident?",
+      "options": [
+        {
+          "id": "defined",
+          "label": "Defined roles, runbooks, escalation, and a review afterwards",
+          "points": 5
+        },
+        {
+          "id": "informal_repeatable",
+          "label": "An informal but repeatable process",
+          "points": 3
+        },
+        {
+          "id": "whoever",
+          "label": "It depends on whoever is available",
+          "points": 1,
+          "tags": [
+            "incident_response"
+          ]
+        },
+        {
+          "id": "reactive",
+          "label": "Reactively, with no review afterwards",
+          "points": 0,
+          "tags": [
+            "incident_response"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "incident_response"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q20",
+      "section": 7,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "incident_and_reliability",
+      "text": "Are backups and recovery procedures tested regularly?",
+      "options": [
+        {
+          "id": "tested_targets",
+          "label": "Yes, with documented recovery targets and successful tests",
+          "points": 5
+        },
+        {
+          "id": "occasional",
+          "label": "Backups exist and are tested occasionally",
+          "points": 3
+        },
+        {
+          "id": "untested",
+          "label": "Backups exist, but recovery has never been tested",
+          "points": 1,
+          "tags": [
+            "reliability"
+          ]
+        },
+        {
+          "id": "inconsistent",
+          "label": "Backups are inconsistent or absent",
+          "points": 0,
+          "tags": [
+            "reliability"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "reliability"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q21",
+      "section": 7,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "incident_and_reliability",
+      "text": "Before a new service goes live, do you check that it is ready to operate?",
+      "help": "Monitoring, ownership, deployment, rollback, capacity, security, backups, and documentation.",
+      "options": [
+        {
+          "id": "checklist",
+          "label": "Yes, through a documented readiness checklist or review",
+          "points": 5
+        },
+        {
+          "id": "important_only",
+          "label": "Some checks, for the important services",
+          "points": 3
+        },
+        {
+          "id": "informal",
+          "label": "Checks happen informally",
+          "points": 1,
+          "tags": [
+            "operational_readiness"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "operational_readiness"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "operational_readiness"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q22",
+      "section": 7,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "incident_and_reliability",
+      "text": "Do critical applications have agreed availability targets?",
+      "options": [
+        {
+          "id": "measured",
+          "label": "Yes, and we measure performance against them",
+          "points": 5
+        },
+        {
+          "id": "some_services",
+          "label": "Targets exist for some services",
+          "points": 3
+        },
+        {
+          "id": "after_incident",
+          "label": "Availability comes up only after an incident",
+          "points": 1,
+          "tags": [
+            "reliability"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "reliability"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "reliability"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q23",
+      "section": 8,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "platform_and_capability",
+      "text": "Is ownership clear across build, deployment, infrastructure, security, and operations?",
+      "options": [
+        {
+          "id": "clear",
+          "label": "Yes, ownership and skills are clear across the lifecycle",
+          "points": 5
+        },
+        {
+          "id": "key_person",
+          "label": "Mostly covered, but some of it rests on one or two people",
+          "points": 3
+        },
+        {
+          "id": "unclear",
+          "label": "Ownership is unclear, or the skills are thin",
+          "points": 1,
+          "tags": [
+            "capability_and_ownership"
+          ]
+        },
+        {
+          "id": "no_owner",
+          "label": "No internal team owns these activities",
+          "points": 0,
+          "tags": [
+            "capability_and_ownership"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "capability_and_ownership"
+          ],
+          "unknown": true
+        }
+      ]
+    },
+    {
+      "id": "Q24",
+      "section": 8,
+      "type": "single",
+      "required": true,
+      "scored": true,
+      "category": "platform_and_capability",
+      "text": "Do you measure and improve delivery performance over time?",
+      "help": "Deployment frequency, change lead time, recovery time, and change-failure rate are the usual four.",
+      "options": [
+        {
+          "id": "reviewed",
+          "label": "Yes, metrics are reviewed and improvement actions are tracked",
+          "points": 5
+        },
+        {
+          "id": "informal",
+          "label": "We track some metrics informally",
+          "points": 3
+        },
+        {
+          "id": "opinion",
+          "label": "We mostly go on opinion, or on whatever just broke",
+          "points": 1,
+          "tags": [
+            "continuous_improvement"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "points": 0,
+          "tags": [
+            "continuous_improvement"
+          ]
+        },
+        {
+          "id": "unknown",
+          "label": "I do not know",
+          "points": 0,
+          "tags": [
+            "continuous_improvement"
+          ],
+          "unknown": true
+        }
+      ]
+    }
+  ],
+  "lead_fields": [
+    {
+      "id": "L01",
+      "type": "text",
+      "required": true,
+      "text": "What is your name?",
+      "max_length": 120
+    },
+    {
+      "id": "L02",
+      "type": "contact",
+      "required": true,
+      "text": "How should we reach you?",
+      "channels": [
+        {
+          "id": "email",
+          "label": "Work email",
+          "validate": "email"
+        }
+      ]
+    },
+    {
+      "id": "L03",
+      "type": "single",
+      "required": true,
+      "text": "What best describes your role?",
+      "options": [
+        {
+          "id": "founder",
+          "label": "Founder or business owner"
+        },
+        {
+          "id": "cto",
+          "label": "CTO or technical director"
+        },
+        {
+          "id": "eng_manager",
+          "label": "Engineering manager"
+        },
+        {
+          "id": "devops",
+          "label": "DevOps, SRE, platform, or cloud engineer"
+        },
+        {
+          "id": "it_manager",
+          "label": "IT manager"
+        },
+        {
+          "id": "product",
+          "label": "Product manager"
+        },
+        {
+          "id": "finance_ops",
+          "label": "Finance or operations manager"
+        },
+        {
+          "id": "consultant",
+          "label": "Consultant or agency"
+        },
+        {
+          "id": "other",
+          "label": "Other"
+        }
+      ]
+    },
+    {
+      "id": "L04",
+      "type": "multi",
+      "required": true,
+      "max_selections": 3,
+      "text": "What would you like help with first?",
+      "help": "Choose up to three.",
+      "options": [
+        {
+          "id": "first_pipeline",
+          "label": "Build our first CI/CD pipeline"
+        },
+        {
+          "id": "automate_deploys",
+          "label": "Automate deployments"
+        },
+        {
+          "id": "iac",
+          "label": "Introduce Infrastructure as Code"
+        },
+        {
+          "id": "testing_security",
+          "label": "Improve testing and security in delivery"
+        },
+        {
+          "id": "monitoring_incident",
+          "label": "Improve monitoring and incident response"
+        },
+        {
+          "id": "reduce_failures",
+          "label": "Reduce deployment failures and downtime"
+        },
+        {
+          "id": "internal_platform",
+          "label": "Build an internal developer platform"
+        },
+        {
+          "id": "ongoing_support",
+          "label": "Get ongoing DevOps support"
+        },
+        {
+          "id": "strategy_session",
+          "label": "Book a DevOps strategy session"
+        }
+      ]
+    },
+    {
+      "id": "L05",
+      "type": "text",
+      "required": true,
+      "text": "What is your company called?",
+      "max_length": 160
+    },
+    {
+      "id": "L06",
+      "type": "checkbox",
+      "required": false,
+      "wording_version": "devops-consent-1.0",
+      "text": "Send me my report and occasional DevOps guidance from Cloudboosta.",
+      "default": false,
+      "gates_result": false
+    },
+    {
+      "id": "L07",
+      "type": "single",
+      "required": false,
+      "text": "Where are you based?",
+      "options": [
+        {
+          "id": "NG",
+          "label": "Nigeria"
+        },
+        {
+          "id": "GB",
+          "label": "United Kingdom"
+        },
+        {
+          "id": "US",
+          "label": "United States"
+        },
+        {
+          "id": "CA",
+          "label": "Canada"
+        },
+        {
+          "id": "ZA",
+          "label": "South Africa"
+        },
+        {
+          "id": "KE",
+          "label": "Kenya"
+        },
+        {
+          "id": "GH",
+          "label": "Ghana"
+        },
+        {
+          "id": "other",
+          "label": "Somewhere else"
+        }
+      ]
+    }
+  ],
+  "payload_map": {
+    "fields": {
+      "organisation_type": {
+        "field": "Q01",
+        "mode": "label"
+      },
+      "team_size": {
+        "field": "Q02",
+        "mode": "label"
+      },
+      "release_frequency": {
+        "field": "Q03",
+        "mode": "label"
+      },
+      "name": {
+        "field": "L01",
+        "mode": "raw"
+      },
+      "contact": {
+        "field": "L02",
+        "mode": "raw"
+      },
+      "role": {
+        "field": "L03",
+        "mode": "label"
+      },
+      "desired_help": {
+        "field": "L04",
+        "mode": "labels"
+      },
+      "company": {
+        "field": "L05",
+        "mode": "raw"
+      },
+      "country": {
+        "field": "L07",
+        "mode": "value"
+      }
+    },
+    "context": [
+      "team_size",
+      "release_frequency",
+      "organisation_type"
+    ],
+    "consent_field": "L06"
+  },
+  "copy": {
+    "landing": {
+      "eyebrow": "Free assessment",
+      "title": "How reliably can your team build, release, and operate software?",
+      "body": "Answer 24 short questions about how you version, build, test, deploy, and run your applications. You will get a delivery readiness score, your biggest bottleneck, and three practical next steps.",
+      "meta": [
+        "Takes 6–8 minutes",
+        "No repository or cloud access needed",
+        "Works whether you deploy daily or twice a year"
+      ],
+      "start": "Start the assessment"
+    },
+    "result": {
+      "intro": "Your DevOps Delivery Readiness Score shows how consistently your organisation can build, release, and operate software. It is a starting point for a conversation, not a verdict on your engineering.",
+      "disclaimer": "This result is based on your answers and is not a code review, a security audit, or a production-readiness certification. A detailed roadmap requires a strategy session and technical discovery.",
+      "primary_heading": "Your biggest bottleneck",
+      "secondary_heading": "Also worth reviewing",
+      "actions_heading": "Three things to do next",
+      "cta": "Book a DevOps strategy session",
+      "cta_support": "Discuss your result with our team and define a practical roadmap for faster, safer, and more reliable software delivery.",
+      "email_heading": "Your full report is on its way",
+      "email_body_email": "We have sent the complete breakdown to {contact} — every finding, the reasoning behind it, and the three things to do first.",
+      "email_hint": "It usually arrives within a minute. If it does not, check your spam folder before assuming it went missing.",
+      "email_failed_heading": "We could not send your report",
+      "email_failed_body": "Your score and findings are on this screen, and nothing has been lost. We will retry shortly — if it does not arrive, reply to any Cloudboosta message and we will send it by hand."
+    },
+    "consent_note": "We will only email or message you beyond this result if you tick the box below.",
+    "findings": {
+      "delivery_automation": {
+        "title": "Delivery automation",
+        "body": "Your highest-priority opportunity is delivery automation. Builds, deployments, approvals, or rollbacks still depend on a person doing them correctly under pressure. Start by standardising the whole path — build, test, deploy, approve, roll back — for one representative application, then copy it.",
+        "actions": [
+          "Pick one application and write down every manual step between a merged change and it running in production.",
+          "Automate the deployment for that one application end to end, including the rollback.",
+          "Test the rollback deliberately, on a normal working day, before you need it."
+        ]
+      },
+      "ci_cd_foundation": {
+        "title": "CI/CD foundation",
+        "body": "Establish a CI/CD foundation: version-controlled pipeline configuration, automated validation on every change, promotion between environments, deployment approvals, and a defined rollback. Without this, every other improvement has nowhere to run.",
+        "actions": [
+          "Add a pipeline that builds and tests every pull request, and keep its configuration in the repository.",
+          "Make the pipeline the only route to production for one application, then widen it.",
+          "Add environment promotion so the artefact tested in staging is the artefact deployed to production."
+        ]
+      },
+      "infrastructure_reproducibility": {
+        "title": "Infrastructure reproducibility",
+        "body": "Introduce Infrastructure as Code and reusable environment templates, so infrastructure changes are reviewable, repeatable, and recoverable. The test is simple: could you rebuild production from code, and would the result match?",
+        "actions": [
+          "Put one environment under Infrastructure as Code, starting with whatever is easiest to recreate.",
+          "Define staging and production from the same templates, with the differences stated as parameters.",
+          "Move configuration and secrets into a managed secret service, out of deployment files and chat."
+        ]
+      },
+      "testing_devsecops": {
+        "title": "Testing and DevSecOps",
+        "body": "Move automated tests and security checks earlier in delivery, then define release gates appropriate to each application. A check that reports but cannot block a release is documentation, not a control.",
+        "actions": [
+          "Agree which checks are allowed to block a release, and make those blocking.",
+          "Add automated dependency and container scanning to the pipeline rather than to a quarterly review.",
+          "Name an owner, a severity scale, and a deadline for security findings before you need them."
+        ]
+      },
+      "observability_gap": {
+        "title": "Observability",
+        "body": "Build an observability baseline: service health, logs, metrics, traces, alerts that are worth waking someone for, and a named owner for each critical service. If customers report problems before your systems do, this is the first thing to fix.",
+        "actions": [
+          "Centralise logs and metrics for the two or three services that matter most.",
+          "Build one dashboard per critical service that answers \"is this healthy right now\".",
+          "Delete or fix every alert nobody acts on, so the remaining ones mean something."
+        ]
+      },
+      "incident_and_reliability": {
+        "title": "Reliability and incident response",
+        "body": "Establish incident-response ownership, availability targets, recovery runbooks, verified backups, and a review after each incident. Most of this is agreement and writing rather than engineering, which is why it is so often missing.",
+        "actions": [
+          "Define who leads an incident, who communicates, and how it escalates — before the next one.",
+          "Restore a backup into a scratch environment and time it. An untested backup is not a backup.",
+          "Write a short runbook for the two failures you have already seen more than once."
+        ]
+      },
+      "source_control_traceability": {
+        "title": "Source control and traceability",
+        "body": "Tighten version control and the trail that connects a production change to its commit, reviewer, ticket, and deployment. This is the cheapest maturity available to you and it makes every incident shorter.",
+        "actions": [
+          "Protect the main branch and require review before merge.",
+          "Get every piece of code that reaches production into version control, including the scripts.",
+          "Link deployments to commits so a production change can be traced without an investigation."
+        ]
+      },
+      "platform_and_capability": {
+        "title": "Platform and team capability",
+        "body": "Define a platform-engineering roadmap — golden paths, reusable templates, developer self-service, standard guardrails — and make delivery performance something you measure rather than debate. Where ownership rests on one or two people, this is also the fix for that.",
+        "actions": [
+          "Write down who owns build, deployment, infrastructure, security, and operations. Fill the gaps that appear.",
+          "Turn whatever your best team does into a template the others can start from.",
+          "Track deployment frequency, lead time, change-failure rate, and recovery time, and review them monthly."
+        ]
+      },
+      "continuous_improvement": {
+        "title": "Continuous improvement",
+        "body": "No single area stands out as your bottleneck, which at this level is the finding. The work now is holding what you have and improving it deliberately — platform scale, developer experience, and the delivery metrics that show whether either is moving.",
+        "actions": [
+          "Review your delivery metrics on a schedule, and act on the trend rather than the last incident.",
+          "Invest in developer self-service so improvement does not depend on a central team.",
+          "Re-run this assessment in six months and compare, rather than trusting the impression."
+        ]
+      },
+      "managed_devops": {
+        "title": "A managed DevOps engagement",
+        "body": "Based on your answers, a managed DevOps engagement is likely to be the fastest route: we establish the foundations, operate the delivery platform with you, and transfer the capability to your team rather than keeping it.",
+        "actions": []
+      }
+    },
+    "email": {
+      "product": "DevOps Delivery Readiness Assessment",
+      "score_label": "DevOps Delivery Readiness Score",
+      "report_line": "Here is your full DevOps Delivery Readiness report.",
+      "operator_summary": [
+        {
+          "label": "Team",
+          "key": "team_size"
+        },
+        {
+          "label": "Releases",
+          "key": "release_frequency"
+        },
+        {
+          "label": "Builds",
+          "key": "organisation_type"
+        }
+      ]
+    }
+  }
+}
